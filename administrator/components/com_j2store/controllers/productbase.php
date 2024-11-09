@@ -82,7 +82,7 @@ class J2StoreControllerProductsBase extends F0FController
     public function getRelatedProducts()
     {
         $app = J2Store::platform()->application();
-        $db = Factory::getDbo();
+        $db = Factory::getContainer()->get('DatabaseDriver');
         $q = $app->input->post->get('q', '', 'string');
         $ignore_product_id = $app->input->getInt('product_id');
         $json = array();
@@ -1006,7 +1006,7 @@ class J2StoreControllerProductsBase extends F0FController
             $filter_id = $app->input->getString('filter_pid', '');
             $product_list = array();
 
-            $db = Factory::getDbo();
+            $db = Factory::getContainer()->get('DatabaseDriver');
             $query = $db->getQuery(true)->select('pa.product_id')->from('#__j2store_product_options AS pa')
                 ->where('pa.product_id !=' . $db->q($product_id))
                 ->group('pa.product_id')
