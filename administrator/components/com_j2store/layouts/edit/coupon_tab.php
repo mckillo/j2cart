@@ -2,9 +2,8 @@
 defined('_JEXEC') or die;
 $platform = J2Store::platform();
 $platform->loadExtra('behavior.formvalidator');
-
 $platform->loadExtra('behavior.multiselect');
-$platform->loadExtra('formbehavior.chosen', '.chosenselect');
+
 $row_class = 'row';
 $col_class = 'col-md-';
 $alert_html = '<joomla-alert type="danger" close-text="Close" dismiss="true" role="alert" style="animation-name: joomla-alert-fade-in;"><div class="alert-heading"><span class="error"></span><span class="visually-hidden">Error</span></div><div class="alert-wrapper"><div class="alert-message" >'.JText::_('J2STORE_INVALID_INPUT_FIELD').'</div></div></joomla-alert>' ;

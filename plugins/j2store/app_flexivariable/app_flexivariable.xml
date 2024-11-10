@@ -12,7 +12,6 @@
 	<files>
 		<filename plugin="app_flexivariable">app_flexivariable.php</filename>
 		<folder>app_flexivariable</folder>
-		<filename>index.html</filename>
 	</files>
 	<languages folder="languages">
 		<language tag="en-GB">en-GB.plg_j2store_app_flexivariable.ini</language>

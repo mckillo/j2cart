@@ -15,7 +15,6 @@
 	</description>
 <files>
 	<filename module="mod_j2store_cart">mod_j2store_cart.php</filename>
-	<filename>index.html</filename>
 	<filename>helper.php</filename>
 	<filename>mod_j2store_cart.xml</filename>
 	<folder>css</folder>

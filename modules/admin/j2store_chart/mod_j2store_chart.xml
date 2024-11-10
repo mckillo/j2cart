@@ -21,7 +21,6 @@
 	</description>
 <files>
 	<filename module="mod_j2store_chart">mod_j2store_chart.php</filename>
-	<filename>index.html</filename>
 	<filename>helper.php</filename>
 	<filename>mod_j2store_chart.xml</filename>
 	<folder>tmpl</folder>

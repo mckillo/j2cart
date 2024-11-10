@@ -12,6 +12,5 @@
 	<files>
 		<filename plugin="app_localization_data">app_localization_data.php</filename>
 		<folder>app_localization_data</folder>
-		<filename>index.html</filename>
-	</files>	
+	</files>
 </extension>

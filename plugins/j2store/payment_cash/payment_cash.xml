@@ -12,7 +12,6 @@
 
 	<files>
 		<filename plugin="payment_cash">payment_cash.php</filename>
-		<filename>index.html</filename>
 		<folder>payment_cash</folder>
 	</files>
 

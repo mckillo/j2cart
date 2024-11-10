@@ -13,7 +13,6 @@ type="plugin" group="j2store" method="upgrade">
 	<files>
 		<filename plugin="shipping_free">shipping_free.php</filename>
 		<folder>shipping_free</folder>
-		<filename>index.html</filename>
 	</files>
 	<config>
 		<fields name="params">

@@ -9,7 +9,7 @@ defined('_JEXEC') or die;
 // load tooltip behavior
 JHtml::_('bootstrap.tooltip');
 JHtml::_('behavior.multiselect');
-JHtml::_('formbehavior.chosen', 'select');
+
 $sidebar = JHtmlSidebar::render();
 $row_class = 'row';
 $col_class = 'col-md-';

@@ -304,11 +304,11 @@ $(document).on('click', '#button-register', function() {
 					});
 
 				if (json['error']['password']) {
-					$('#billing-address input[name=\'password\'] + br').after('<span class="j2error">' + json['error']['password'] + '</span>');
+					$('#billing-address input[name=\'password\']').after('<span class="j2error">' + json['error']['password'] + '</span>');
 				}
 
 				if (json['error']['confirm']) {
-					$('#billing-address input[name=\'confirm\'] + br').after('<span class="j2error">' + json['error']['confirm'] + '</span>');
+					$('#billing-address input[name=\'confirm\']').after('<span class="j2error">' + json['error']['confirm'] + '</span>');
 				}				
 
 			} else {

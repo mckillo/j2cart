@@ -12,6 +12,5 @@
 	<files>
 		<filename plugin="app_diagnostics">app_diagnostics.php</filename>
 		<folder>app_diagnostics</folder>
-		<filename>index.html</filename>
-	</files>	
+	</files>
 </extension>

@@ -11,8 +11,7 @@ $platform->loadExtra('behavior.modal');
 $platform->loadExtra('behavior.formvalidator');
 //JHtml::_('bootstrap.tooltip');
 $platform->loadExtra('bootstrap.modal');
-$platform->loadExtra('formbehavior.chosen', 'select');
-//JHtml::_('formbehavior.chosen', 'select');
+
 $key = 0;
 $route = JURI::root(true)."/index.php";
 $document =JFactory::getDocument();
@@ -57,7 +56,7 @@ if (version_compare(JVERSION, '3.99.99', 'lt')) {
 					</tr>
 				</thead>
 				<?php echo J2Html::input('hidden','user_id', $this->order->user_id,array('id'=>'user_id'));?>
-				<?php echo J2Html::input('hidden', 'boxchecked',0);?>				
+				<?php echo J2Html::input('hidden', 'boxchecked',0);?>
 				<tbody id="j2store-oitem-body">
 					<?php if(!empty($this->orderitems)):?>
 					<?php $i = 0; ?>
@@ -117,14 +116,14 @@ if (version_compare(JVERSION, '3.99.99', 'lt')) {
 							<input class="input-mini" min="0"
 							name="<?php echo $this->form_prefix.'[orderitem]['.$item->j2store_orderitem_id.'][orderitem_quantity]';?>"
 							type="number" value="<?php echo $item->orderitem_quantity; ?>" />
-							<!--  
+							<!--
 							<a class="btn btn-small btn-danger btn-xs j2store-remove remove-icon"
 								href="<?php echo JRoute::_('index.php?option=com_j2store&view=orders&task=removeOrderitem&layout=items&oid='.$this->order->j2store_order_id.'&orderitem_id='.$item->j2store_orderitem_id); ?>">
 								<i class="fa fa-trash"></i>
 							</a>
 							-->
 						</td>
-						
+
 
 						<?php if(isset($this->taxes) && count($this->taxes) && $this->params->get('show_item_tax', 0)): ?>
 						<td>
@@ -142,7 +141,7 @@ if (version_compare(JVERSION, '3.99.99', 'lt')) {
 					</tr>
 					<?php endforeach;?>
 					<?php endif;?>
-				</tbody>				
+				</tbody>
 				<tfoot>
 					<tr>
 					<?php if(!empty($this->orderitems)):?>
@@ -150,7 +149,7 @@ if (version_compare(JVERSION, '3.99.99', 'lt')) {
 						if(isset($this->taxes) && count($this->taxes) && $this->params->get('show_item_tax', 0)){
 							$colspan=6;
 						}
-						?>						
+						?>
 						<td colspan="<?php echo $colspan;?>"><a class="btn btn-large btn-warning" onclick="update()" id="update_quantity"><?php echo JText::_('J2STORE_CART_UPDATE');?></a>
 						<a class="btn btn-large btn-danger" onclick="remove_all()" id="remove_quantity"><?php echo JText::_('J2STORE_REMOVE');?></a>
 						</td>
@@ -159,9 +158,9 @@ if (version_compare(JVERSION, '3.99.99', 'lt')) {
 				</tfoot>
 			</table>
 		</div>
-		
+
 		<div class="<?php echo $col_class ?>8">
-		
+
 			<div class="j2store-order-items">
 				<table class="table table-bordered">
 					<tr>
@@ -181,7 +180,7 @@ if (version_compare(JVERSION, '3.99.99', 'lt')) {
 						</td>
 					</tr>
 				</table>
-				
+
 			</div>
 			<div id="j2store-product-display" style="display:none;">
 				<span id="j2store-product-name"></span>
@@ -191,7 +190,7 @@ if (version_compare(JVERSION, '3.99.99', 'lt')) {
 		</div
 
 		<div class="<?php echo $col_class ?>4">
-				<?php // echo $this->loadTemplate('totals'); ?>				
+				<?php // echo $this->loadTemplate('totals'); ?>
 			</div>
 	</div>
 </div>
@@ -227,7 +226,7 @@ var key =<?php echo $key;?>;
 				minLength : 2,
 				select : function(event, ui) {
 					$('input[name=\'product_name\']').attr('value', ui.item.label);
-					$('#j2store-product-name').html(ui.item.label); 
+					$('#j2store-product-name').html(ui.item.label);
 					$('input[name=\'product_id\']').attr('value', ui.item.value);
 					$('#j2store-product-display a').attr('href','<?php echo $add_product_link?>'+ui.item.value);
 					$('#j2store-product-display').show();
@@ -242,7 +241,7 @@ var key =<?php echo $key;?>;
 		});
 		})(j2store.jQuery);
 
-function getProductDetails(){	
+function getProductDetails(){
 	(function($){
 		/* $('#task').attr('value','displayAdminProduct');
 		$('#view').attr('value','products'); */
@@ -250,25 +249,25 @@ function getProductDetails(){
 		var data1 = {
 				option: 'com_j2store',
 				view: 'products',
-				task: 'displayAdminProduct',				
+				task: 'displayAdminProduct',
 			};
 		$.each( post_data, function( key, value ) {
-			
+
 			 if (!(value['name'] in data1) ){
-				 data1[value['name']] = value['value'];	
+				 data1[value['name']] = value['value'];
 			}
-			
+
 		});
 		console.log(data1);
 		$.ajax({
 			type : 'post',
 			url :  '<?php echo $route;?>',
-			data : data1,					
-			success : function(data) {				
+			data : data1,
+			success : function(data) {
 				var html ='';
 				 html += data;
 				$('#j2store-product-display').html(data);
-				//$(html).insertAfter('#j2store-cart-table');				
+				//$(html).insertAfter('#j2store-cart-table');
 			},
 		 error: function(xhr, ajaxOptions, thrownError) {
              //alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
@@ -283,39 +282,39 @@ function update(){
 		var data1 = {
 				option: 'com_j2store',
 				view: 'carts',
-				task: 'update',				
+				task: 'update',
 			};
-		$.each( post_data, function( key, value ) {			
+		$.each( post_data, function( key, value ) {
 			 if (!(value['name'] in data1) ){
-				 data1[value['name']] = value['value'];	
+				 data1[value['name']] = value['value'];
 			}
 		});
-		
+
 		$.ajax({
 			type : 'post',
 			url :  'index.php',
-			data : data1,	
-			dataType: "json",		
+			data : data1,
+			dataType: "json",
 			beforeSend: function() {
 				$('#update_quantity').after('<span class="wait">&nbsp;<img src="<?php echo JUri::root(true); ?>/media/j2store/images/loader.gif" alt="" /></span>');
 				$('#update_quantity').attr('disabled',true);
-				
-			},					
-			success : function(json) {				
+
+			},
+			success : function(json) {
 				$('#update_quantity').attr('disabled',false);
 				$('.wait').remove();
 				$('.j2error').remove();
-				if(json['success']){									
-					
+				if(json['success']){
+
 					window.location='<?php echo $item_url;?>';
-				}else if(json['error']){				
+				}else if(json['error']){
 					$('.message-div').html('<span class="alert alert-error span12">'+json['error']+'</span>');
 				}
 			},
 			error: function(xhr, ajaxOptions, thrownError) {
 		          // alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
 		    }
-		});		
+		});
 	})(j2store.jQuery);
 }
 
@@ -328,28 +327,28 @@ function remove_all(){
 		$.ajax({
 			type : 'post',
 			url :  'index.php?option=com_j2store&view=orders&task=removeOrderitem&oid='+oid,
-			data : post_data,	
-			dataType: "json",		
+			data : post_data,
+			dataType: "json",
 			beforeSend: function() {
 				$('#remove_quantity').after('<span class="wait">&nbsp;<img src="<?php echo JUri::root(true); ?>/media/j2store/images/loader.gif" alt="" /></span>');
 				$('#remove_quantity').attr('disabled',true);
-				
-			},					
-			success : function(json) {				
+
+			},
+			success : function(json) {
 				$('#remove_quantity').attr('disabled',false);
 				$('.wait').remove();
 				$('.j2error').remove();
-				if(json['success']){									
-					
+				if(json['success']){
+
 					window.location='<?php echo $item_url;?>';
-				}else if(json['error']){				
+				}else if(json['error']){
 					$('.message-div').html('<span class="alert alert-error span12">'+json['error']+'</span>');
 				}
 			},
 			error: function(xhr, ajaxOptions, thrownError) {
 		          // alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
 		    }
-		});		
+		});
 		console.log(post_data);
 	})(j2store.jQuery);
 }

@@ -2,52 +2,51 @@
 /**
  * @package J2Store
  * @copyright Copyright (c)2014-17 Ramesh Elamathi / J2Store.org
+ * @copyright Copyright (c) 2024 J2Commerce . All rights reserved.
  * @license GNU GPL v3 or later
  */
+
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Router\Route;
+
 $row_class = 'row';
-$col_class = 'col-md-';
+$col_class = 'col-lg-';
 if (version_compare(JVERSION, '3.99.99', 'lt')) {
     $row_class = 'row-fluid';
     $col_class = 'span';
 }
 ?>
-<div class="shipping-content inline-content">
+<div class="shipping-content inline-content my-5">
 	<div class="<?php echo $row_class; ?>">
 
-		<div class="<?php echo $col_class; ?>6">
+		<div class="<?php echo $col_class; ?>6 align-self-stretch mb-3 mb-lg-0">
+            <div class="d-flex flex-column text-center h-100">
+                <div class="mt-auto">
+                    <span class="fa-4x mb-2 fa-solid fas fa-circle-info"></span>
+                    <h2 class="fs-1 fw-bold"><?php echo Text::_('J2STORE_SHIPPING_HELP_TITLE');?></h2>
+                    <p class="fs-3 text-muted mb-5"><?php echo Text::_('J2STORE_SHIPPING_HELP_DESC');?></p>
+                </div>
 
-			<div class="hero-unit">
-				<h2>Need help in setting up shipping methods ?</h2>
-				<p class="lead">
-					Check our comprehensive user guide.
-				</p>
-				<a onclick="return ! window.open(this.href);" class="btn btn-large btn-warning" href="<?php echo J2Store::buildHelpLink('support/user-guide.html', 'shipping');  ?>">User guide</a>
-				<br>
-				<p class="lead">
-					Shipping is not working?  Check the troubleshooting guide
-				</p>
-				<a onclick="return ! window.open(this.href);" class="btn btn-large btn-danger" href="<?php echo J2Store::buildHelpLink('support/user-guide/troubleshooting-shipping-methods.html', 'shipping'); ?>">Troubleshooting Guide</a>
-				<a onclick="return ! window.open(this.href);" class="btn btn-large btn-info" href="<?php echo  J2Store::buildHelpLink('support.html', 'shipping'); ?>">Support center</a>
-
-			</div>
-
+                <div class="text-center mt-auto mb-4">
+                    <a class="btn btn-outline-primary app-button-open" href="<?php echo J2Store::buildHelpLink('support/shipping-methods', 'shipping'); ?>" target="_blank"><span class="fas fa-solid fa-arrow-up-right-from-square me-2"></span><?php echo Text::_('J2STORE_SHIPPING_HELP_BUTTON_GUIDE_LABEL'); ?></a>
+                    <a class="btn btn-primary app-button-open" href="<?php echo Route::_('index.php?option=com_j2store&view=shippingtroubles'); ?>" target="_blank"><?php echo Text::_('COM_J2STORE_TITLE_SHIPPINGTROUBLES'); ?></a>
+                </div>
+            </div>
 		</div>
-		<div class="<?php echo $col_class ?>6">
-			<div class="hero-unit">
-				<h2>Need more shipping methods? Check our extensions directory</h2>
-				<p class="lead">
-					J2Store has integrations 10+ shipping carriers.
-					<br>
-					Find more at our extensions directory
-				</p>
-				<a onclick="return ! window.open(this.href);" class="btn btn-large btn-success" href="<?php echo  J2Store::buildHelpLink('extensions/shipping-plugins.html', 'shipping'); ?>">Get more shipping plugins </a>
-			</div>
-		</div>
+		<div class="<?php echo $col_class ?>6 align-self-stretch">
+            <div class="d-flex flex-column text-center h-100">
+                <div class="mt-auto">
+                    <span class="fa-4x mb-2 fa-solid fas fa-truck-fast"></span>
+                    <h2 class="fs-1 fw-bold"><?php echo Text::_('J2STORE_SHIPPING_APPS_TITLE');?></h2>
+                    <p class="fs-3 text-muted mb-5"><?php echo Text::_('J2STORE_SHIPPING_APPS_DESC');?></p>
+                </div>
 
+                <div class="text-center mt-auto mb-4">
+                    <a class="btn btn-outline-primary app-button-open" href="<?php echo J2Store::buildHelpLink('extensions/shipping-plugins', 'shipping'); ?>" target="_blank"><span class="fas fa-solid fa-arrow-up-right-from-square me-2"></span><?php echo Text::_('J2STORE_SHIPPING_APPS_BUTTON_LABEL'); ?></a>
+                </div>
+            </div>
+		</div>
 	</div>
-
-
-
 </div>

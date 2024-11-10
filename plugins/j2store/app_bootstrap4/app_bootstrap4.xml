@@ -12,6 +12,5 @@
     <files>
         <filename plugin="app_bootstrap4">app_bootstrap4.php</filename>
         <folder>app_bootstrap4</folder>
-        <filename>index.html</filename>
     </files>
 </extension>

@@ -12,7 +12,6 @@
 	<files>
 		<filename plugin="app_currencyupdater">app_currencyupdater.php</filename>
 		<folder>app_currencyupdater</folder>
-		<filename>index.html</filename>
 	</files>
 
 	<config>

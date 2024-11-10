@@ -12,7 +12,6 @@
 
 	<files>
 		<filename plugin="j2userregister">j2userregister.php</filename>
-		<filename>index.html</filename>
 		<folder>fields</folder>
 		<folder>js</folder>
 		<folder>tmpl</folder>

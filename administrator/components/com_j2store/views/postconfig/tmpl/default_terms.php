@@ -1,24 +1,33 @@
 <?php
 /**
- * @package J2Store
- * @copyright Copyright (c)2014-17 Ramesh Elamathi / J2Store.org
- * @license GNU GPL v3 or later
+ * @copyright Copyright (C) 2014-2019 Weblogicx India. All rights reserved.
+ * @copyright Copyright (C) 2024 J2Commerce, Inc. All rights reserved.
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GNU/GPLv3 or later
+ * @website https://www.j2commerce.com
  */
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
+use Joomla\CMS\Language\Text;
 ?>
-	<?php if(J2Store::isPro() != 1): ?>
-	<h3><?php echo JText::_('J2STORE_POSTCONFIG_LBL_MANDATORYINFO') ?></h3>
 
-	<label for="acceptlicense" class="postsetup-main" id="acceptlicense"> <input
-		type="checkbox" name="acceptlicense"
-		<?php if($this->params->get('acceptlicense')): ?> checked="checked" <?php endif; ?> />
-		<?php echo JText::_('J2STORE_POSTCONFIG_LBL_ACCEPTLICENSE')?>
-	</label> </br>
-	<div class="postsetup-desc"><?php echo JText::_('J2STORE_POSTCONFIG_DESC_ACCEPTLICENSE');?></div>
-	<br> <label for="acceptsupport" class="postsetup-main" id="acceptsupport"> <input
-		type="checkbox"  name="acceptsupport"
-		<?php if($this->params->get('acceptsupport')): ?> checked="checked" <?php endif; ?> />
-		<?php echo JText::_('J2STORE_POSTCONFIG_LBL_ACCEPTSUPPORT')?>
-	</label> </br>
-	<?php endif;?>
+
+<div class="control-group">
+    <div class="form-check">
+        <input class="form-check-input" type="checkbox" value="" name="acceptlicense" id="acceptlicense" <?php if($this->params->get('acceptlicense')): ?> checked="checked" <?php endif; ?>>
+        <label class="form-check-label" for="acceptlicense">
+            <?php echo Text::_('J2STORE_POSTCONFIG_LBL_ACCEPTLICENSE')?>
+        </label>
+    </div>
+    <div class="form-text"><?php echo Text::_('J2STORE_POSTCONFIG_DESC_ACCEPTLICENSE');?></div>
+</div>
+<div class="control-group">
+    <div class="form-check">
+        <input class="form-check-input" type="checkbox" value="" name="acceptsupport" id="acceptsupport" <?php if($this->params->get('acceptsupport')): ?> checked="checked" <?php endif; ?>>
+        <label class="form-check-label" for="acceptsupport">
+			<?php echo Text::_('J2STORE_POSTCONFIG_LBL_ACCEPTSUPPORT')?>
+        </label>
+    </div>
+</div>
+
+
+

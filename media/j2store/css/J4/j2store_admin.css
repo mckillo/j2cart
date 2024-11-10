@@ -554,6 +554,20 @@ span.required{display: inline; float: left;}
 .j2store-product-thumb-image{
     width: 100px;
 }
+.j2store-product-thumb-75{
+    width: 75px;
+}
+.j2store-product-thumb-50{
+    width: 50px;
+}
+
+/*j2store accordion*/
+.j2-store-accordion.accordion {
+    --accordion-btn-icon-width: 0.825rem;
+    --accordion-btn-focus-box-shadow: none;
+}
+
+
 
 /*  j2store tab */
 div.j2store-tab-container{
@@ -783,7 +797,6 @@ div.j2store-tab div.j2store-tab-content:not(.active){
 #j-main-container {
     padding-top: 2rem;
 }
-
 /*navbar*/
 #j2store-navbar{
     font-size:0.86rem;
@@ -877,7 +890,18 @@ div.j2store-tab div.j2store-tab-content:not(.active){
     #j2store-navbar .navbar-nav .dropdown-menu {
         position: static;
     }
+    /*#j2store-navbar .collapse:not(.show) {
+        display: none;
+    }*/
 
+   /* #j2store-navbar .nav-item {
+        padding: 10px 47px;
+    }*/
+    /*#j2store-navbar .navbar {
+        position: sticky;
+        top: 0;
+        z-index: 1;
+    }*/
     #j2store-navbar .btn-group h3 {
         color: #FFFFFF;
         margin: -40px -117px;
@@ -902,8 +926,11 @@ div.j2store-tab div.j2store-tab-content:not(.active){
 .com_j2store a[target="_blank"]::before{
     content: none !important;
 }
-
+.com_j2store joomla-field-fancy-select .choices{
+    width: 260px;
+}
 
 .com_j2store .min-w-0 {min-width:0!important;}
 .com_j2store .form-control-qty {max-width:150px!important;}
 .com_j2store .j2commerce-app-image {width:140px;}
+.com_j2store .inventory-form-control {width:60px;}

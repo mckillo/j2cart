@@ -11,7 +11,6 @@
 	<description>J2STORE_MODULE_MENU_XML_DESCRIPTION</description>
 	<files>
 		<filename module="mod_j2store_menu">mod_j2store_menu.php</filename>
-		<filename>index.html</filename>
 		<filename>helper.php</filename>
 		<folder>tmpl</folder>
 		<folder>css</folder>

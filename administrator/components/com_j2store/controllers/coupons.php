@@ -31,7 +31,7 @@ class J2StoreControllerCoupons extends F0FController
     function add()
     {
         $platform = J2Store::platform();
-        $platform->loadExtra('formbehavior.chosen', '.chosenselect');
+
         $platform->loadExtra('behavior.multiselect');
         $app = $platform->application();
         $task = $app->input->getstring('task','');

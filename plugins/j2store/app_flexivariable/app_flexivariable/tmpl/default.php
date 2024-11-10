@@ -20,7 +20,6 @@ $platform->loadExtra('behavior.modal');
 $platform->loadExtra('behavior.tooltip');
 $platform->loadExtra('behavior.multiselect');
 $platform->loadExtra('dropdown.init');
-$platform->loadExtra('formbehavior.chosen', 'select');
 
 JHtml::_('script', 'media/j2store/js/j2store.js', false, false);
 ?>

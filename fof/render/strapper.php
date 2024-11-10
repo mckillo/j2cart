@@ -541,7 +541,7 @@ JS;
 		{
 			JHtml::_('bootstrap.tooltip');
 			JHtml::_('dropdown.init');
-			JHtml::_('formbehavior.chosen', 'select');
+
 			$view	 = $form->getView();
 			$order	 = $view->escape($view->getLists()->order);
 			$html .= <<<HTML

@@ -5,7 +5,7 @@
     margin-top:20px;
 }
 
-/*input filed */
+/*input field */
 
 .com_j2store .control-group .controls .field-calendar .input-group .form-control{
     width: auto !important;
@@ -17,7 +17,7 @@
     flex:none;
 }
 
-.com_j2store  select{
+.com_j2store select:not(.form-select) {
     width: 203px;
     padding: 4px 4px;
 }

@@ -14,7 +14,7 @@ $platform->loadExtra('behavior.framework');
 //$platform->loadExtra('behavior.tooltip');
 $platform->loadExtra('behavior.multiselect');
 $platform->loadExtra('dropdown.init');
-$platform->loadExtra('formbehavior.chosen', 'select');
+
 $current_page = $this->state->get('current_page', 'popular');
 
 $total = count($this->items);
@@ -30,7 +30,7 @@ if (version_compare(JVERSION, '3.99.99', 'lt')) {
 <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,300,600' rel='stylesheet' type='text/css'>
 <form action="<?php echo JRoute::_('index.php?option=com_j2store&view=appstores'); ?>" method="post"
       name="adminForm"
-      id="adminForm" xmlns="https://www.w3.org/1999/html">
+      id="adminForm">
     <input type="hidden" name="task" value="browse"/>
     <input type="hidden" name="boxchecked" value="0"/>
     <input type="hidden" name="page" value="<?php echo $current_page; ?>"/>

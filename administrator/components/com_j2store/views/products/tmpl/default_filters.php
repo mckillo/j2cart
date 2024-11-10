@@ -2,70 +2,57 @@
 /**
  * @package J2Store
  * @copyright Copyright (c)2014-17 Ramesh Elamathi / J2Store.org
+ * @copyright Copyright (c) 2024 J2Commerce . All rights reserved.
  * @license GNU GPL v3 or later
  */
-// No direct access
-defined('_JEXEC') or die;
+
+// No direct access to this file
+defined('_JEXEC') or die('Restricted access');
+use Joomla\CMS\Factory;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
+
 $platform = J2Store::platform();
 $platform->loadExtra('behavior.modal');
+
+$search = htmlspecialchars($this->state->search);
+
+HTMLHelper::_('bootstrap.collapse', '[data-bs-toggle="collapse"]');
+
+$this->product_types[0] = Text::_('J2STORE_PRODUCT_TYPE');
+$wa = Factory::getApplication()->getDocument()->getWebAssetManager();
+$script = "function j2storeResetAllFilters(){document.querySelectorAll('.j2store-product-filters').forEach(function(e){e.value=''});document.getElementById('search').value='';document.getElementById('j2store_product_type').value='';document.getElementById('adminForm').submit()}function resetAdvancedFilters(){document.querySelectorAll('#advanced-search-controls .j2store-product-filters').forEach(function(e){e.value=''});document.getElementById('adminForm').submit()}";
+$wa->addInlineScript($script, [], []);
+
 ?>
-<table class="adminlist table table-striped table-condensed">
-	<tr>
-		<td>
-			<?php $search = htmlspecialchars($this->state->search);?>
-			<div class="input-prepend">
-			<span class="add-on"><?php echo JText::_( 'J2STORE_FILTER_SEARCH' ); ?></span>
-			<?php echo  J2Html::text('search',$search,array('id'=>'search' ,'class'=>'input j2store-product-filters'));?>
+<div class="btn-toolbar w-100 justify-content-end mb-3">
+    <div class="filter-search-bar btn-group flex-grow-1 flex-lg-grow-0 mb-2 mb-lg-0">
+        <div class="input-group w-100">
+	        <?php echo J2Html::text('search',$search,array('id'=>'search' ,'class'=>'form-control j2store-product-filters','placeholder'=>Text::_( 'J2STORE_FILTER_SEARCH' )));?>
+            <span class="filter-search-bar__label visually-hidden">
+                <label id="search-lbl" for="search"><?php echo Text::_( 'J2STORE_FILTER_SEARCH' ); ?></label>
+            </span>
+	        <?php echo J2Html::buttontype('go','<span class="filter-search-bar__button-icon icon-search" aria-hidden="true"></span>' ,array('class'=>'btn btn-primary','onclick'=>'this.form.submit();'));?>
+        </div>
+    </div>
 
-			<?php  echo  J2Html::button('go',JText::_( 'J2STORE_FILTER_GO' ) ,array('class'=>'btn btn-success','onclick'=>'this.form.submit();'));?>
-			<?php  echo  J2Html::button('reset',JText::_( 'J2STORE_FILTER_RESET' ),array('id'=>'reset-filter-search','class'=>'btn btn-inverse',"onclick"=>"jQuery('#search').val('');this.form.submit();"));?>
-			</div>
-		</td>
-		<td>
-			<div class="input-prepend">
-				<span class="add-on">
-					<?php echo J2html::label(JText::_('J2STORE_PRODUCT_TYPE') ,'product_type',array('class'=>'control-label'));?>
-				</span>
-				<?php
-							echo J2Html::select()->clearState()
-							->type('genericlist')
-							->name('product_type')
-							->attribs(array('class'=>'input-small j2store-product-filters','onchange'=>'this.form.submit();'))
-							->value($this->state->product_type)
-							->setPlaceHolders($this->product_types)
-							->getHtml();
-						?>
-				</div>
-		</td>
-		<td>
-			<?php echo J2Html::button('reset',JText::_( 'J2STORE_FILTER_RESET_ALL' ),array('id'=>'reset-all-filter','class'=>'btn btn-danger' ,'onclick'=>'j2storeResetAllFilters();'));?>
-		</td>
-		<td>
-			<?php	if($this->state->since || $this->state->until ||  $this->state->visible || $this->state->taxprofile_id || $this->state->vendor_id || $this->state->manufacturer_id || $this->state->productid_from || $this->state->productid_to || $this->state->pricefrom || $this->state->priceto || $this->state->visible ):?>
-						<input id="hideBtnAdvancedControl" class="btn btn-inverse" type="button" onclick="jQuery('#advanced-search-controls').toggle('click');jQuery(this).toggle('click');jQuery('#showBtnAdvancedControl').toggle('click');" value="<?php echo JText::_('J2STORE_HIDE_FILTER_ADVANCED')?>"/>
-						<input id="showBtnAdvancedControl" class="btn btn-success" type="button" onclick="jQuery('#advanced-search-controls').toggle('click');jQuery(this).toggle('click');jQuery('#hideBtnAdvancedControl').toggle('click');" value="<?php echo JText::_('J2STORE_SHOW_FILTER_ADVANCED')?>" style="display:none;" />
-					<?php else:?>
-					<input id="hideBtnAdvancedControl" class="btn btn-inverse" type="button" onclick="jQuery('#advanced-search-controls').toggle('click');jQuery(this).toggle('click');jQuery('#showBtnAdvancedControl').toggle('click');" value="<?php echo JText::_('J2STORE_HIDE_FILTER_ADVANCED')?>"  style="display:none;"/>
-					<input id="showBtnAdvancedControl" class="btn btn-success" type="button" onclick="jQuery('#advanced-search-controls').toggle('click');jQuery(this).toggle('click');jQuery('#hideBtnAdvancedControl').toggle('click');" value="<?php echo JText::_('J2STORE_SHOW_FILTER_ADVANCED')?>" />
-			<?php endif;?>
-		</td>
-		<td><?php echo $this->pagination->getLimitBox();?></td>
-	</tr>
-</table>
+    <div class="filter-search-actions btn-group ms-lg-2 flex-grow-1 flex-lg-grow-0 mb-2 mb-lg-0">
+        <button type="button" class="filter-search-actions__button btn btn-primary js-stools-btn-filter w-100" data-bs-toggle="collapse" data-bs-target="#collapseFilters" aria-expanded="false" aria-controls="collapseFilters">
+            <?php echo Text::_('JFILTER_OPTIONS');?><span class="icon-angle-down ms-1" aria-hidden="true"></span>
+        </button>
+        <?php echo J2Html::buttontype('reset',Text::_( 'JCLEAR' ),array('id'=>'reset-all-filter','class'=>'btn btn-primary' ,'onclick'=>'j2storeResetAllFilters();'));?>
+    </div>
+    <div class="ordering-select d-flex gap-2 ms-lg-2  flex-grow-1 flex-lg-grow-0">
+	    <?php echo J2Html::select()->clearState()
+		    ->type('genericlist')
+		    ->name('product_type')
+		    ->attribs(array('class'=>'form-select j2store-product-filters w-100','onchange'=>'this.form.submit();'))
+		    ->value($this->state->product_type)
+		    ->setPlaceHolders($this->product_types)
+		    ->getHtml();
+	    ?>
+	    <?php echo $this->pagination->getLimitBox();?>
+    </div>
+</div>
 
-<script type="text/javascript">
-	function j2storeResetAllFilters(){
-		jQuery(".j2store-product-filters").each(function(index){
-			jQuery(this).val('');
-		});
-		jQuery("#search").val('');
-		jQuery("#j2store_product_type").val('');
-		jQuery("#adminForm").submit();
-	}
-	function resetAdvancedFilters(){
-		jQuery("#advanced-search-controls .j2store-product-filters").each(function(index){
-			jQuery(this).val('');
-		});
-		jQuery("#adminForm").submit();
-	}
-</script>
+

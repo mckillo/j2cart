@@ -19,7 +19,7 @@ $check_order_id = array();
 $platform = J2Store::platform();
 $platform->addIncludePath(JPATH_COMPONENT . '/helpers/html');
 $platform->loadExtra('behavior.multiselect');
-$platform->loadExtra('formbehavior.chosen', 'select');
+
 $row_class = 'row';
 $col_class = 'col-md-';
 if (version_compare(JVERSION, '3.99.99', 'lt')) {

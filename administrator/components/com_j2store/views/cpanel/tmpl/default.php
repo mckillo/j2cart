@@ -9,7 +9,7 @@ defined('_JEXEC') or die;
 $platform = J2Store::platform();
 $platform->loadExtra('bootstrap.tooltip');
 $platform->loadExtra('behavior.multiselect');
-$platform->loadExtra('formbehavior.chosen', 'select');
+
 $sidebar = JHtmlSidebar::render();
 $row_class = 'row';
 $col_class = 'col-md-';
@@ -45,6 +45,11 @@ if (version_compare(JVERSION, '3.99.99', 'lt')) {
                         </div>
                         <div class="<?php echo $row_class;?>">
                             <div class="<?php echo $col_class;?>12">
+                                <?php echo J2Store::help()->info_j2commerce(); ?>
+                            </div>
+                        </div>
+                        <div class="<?php echo $row_class;?>">
+                            <div class="<?php echo $col_class;?>12">
                                 <?php echo J2Store::help()->alert(
                                     'coupon_update',
                                     JText::_('J2STORE_ATTENTION'),
@@ -75,7 +80,7 @@ if (version_compare(JVERSION, '3.99.99', 'lt')) {
                                         </h4>
                                     </div>
                                 </div>
-                                <?php echo J2Store::help()->watch_video_tutorials(); ?>
+                                <?php /*echo J2Store::help()->watch_video_tutorials();*/ ?>
                                 <div class="<?php echo $row_class;?>">
                                     <!-- Chart-->
                                     <div class="<?php echo $col_class;?>12 stats-mini">

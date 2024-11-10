@@ -11,11 +11,10 @@
 	<description>J2STORE_REPORT_PRODUCTS_DESC</description>
 	<files>
 		<filename plugin="report_products">report_products.php</filename>
-		<filename>index.html</filename>
 		<folder>report_products</folder>
 	</files>
 	<languages folder="languages">
-		<language tag="en-GB">en-GB.plg_j2store_report_products.ini</language>		
+		<language tag="en-GB">en-GB.plg_j2store_report_products.ini</language>
 	</languages>
 	<config></config>
 </extension>
