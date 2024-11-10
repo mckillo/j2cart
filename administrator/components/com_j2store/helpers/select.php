@@ -14,8 +14,6 @@ use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\LanguageHelper;
 use Joomla\CMS\Language\Text;
 
-use Joomla\CMS\Factory;
-
 /**
  * J2Store helper.
  */
@@ -270,17 +268,6 @@ class J2StoreHelperSelect {
 	}
 
 	public static function taxclass($default, $name) {
-		/* $db = Factory::getContainer()->get('DatabaseDriver');
-			$query = $db->getQuery(true);
-		$query->select('j2store_taxprofile_id as value, taxprofile_name as text')->from('#__j2store_taxprofiles')
-		->where('enabled=1');
-		$db->setQuery($query);
-		$array = $db->loadObjectList();
-		$options[] = JHtml::_( 'select.option', 0, JText::_('J2STORE_SELECT_OPTION'));
-		foreach( $array as $data) {
-		$options[] = JHtml::_( 'select.option', $data->value, $data->text);
-		}
-		return	JHtml::_('select.genericlist', $options, $name, 'class="inputbox"', 'value', 'text', $default); */
 
 		return J2Html::select()->clearState()
 		->type('genericlist')
