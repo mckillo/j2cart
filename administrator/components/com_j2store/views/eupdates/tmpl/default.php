@@ -13,8 +13,11 @@ $platform->loadExtra('behavior.modal');
 $platform->loadExtra('bootstrap.tooltip');
 $platform->loadExtra('behavior.multiselect');
 $platform->loadExtra('dropdown.init');
+$platform->loadExtra('formbehavior.chosen', 'select');
+
 
 $updates = F0FModel::getTmpInstance('EUpdates', 'J2StoreModel')->getUpdates();
+
 
 $update_link = J2Store::buildHelpLink('my-downloads.html', 'update');
 

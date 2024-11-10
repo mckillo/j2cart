@@ -2,15 +2,10 @@
 /**
  * @package J2Store
  * @copyright Copyright (c)2014-17 Ramesh Elamathi / J2Store.org
- * @copyright Copyright (c) 2024 J2Commerce . All rights reserved.
  * @license GNU GPL v3 or later
  */
-
-
 // No direct access to this file
-defined('_JEXEC') or die('Restricted access');
-use Joomla\CMS\Factory;
-
+defined('_JEXEC') or die;
 require_once JPATH_ADMINISTRATOR.'/components/com_j2store/controllers/traits/list_view.php';
 class J2StoreControllerManufacturers extends F0FController
 {
@@ -50,72 +45,68 @@ class J2StoreControllerManufacturers extends F0FController
                     'type' => 'text',
                     'name' => 'company',
                     'value' => $manufacturer_table->company,
-                    'options' => array('required' => 'true','class' => 'form-control')
+                    'options' => array('required' => 'true','class' => 'input-xlarge')
                 ),
                 'tax_number' => array(
                     'label' => 'J2STORE_ADDRESS_TAX_NUMBER',
                     'type' => 'text',
                     'name' => 'tax_number',
                     'value' => $manufacturer_table->tax_number,
-                    'options' => array('class' => 'form-control')
+                    'options' => array('class' => 'input-xlarge')
                 ),
                 'address_1' => array(
                     'label' => 'J2STORE_ADDRESS_LINE1',
                     'type' => 'text',
                     'name' => 'address_1',
                     'value' => $manufacturer_table->address_1,
-                    'options' => array('class' => 'form-control')
+                    'options' => array('class' => 'input-xlarge')
                 ),
                 'address_2' => array(
                     'label' => 'J2STORE_ADDRESS_LINE2',
                     'type' => 'text',
                     'name' => 'address_2',
                     'value' => $manufacturer_table->address_2,
-                    'options' => array('class' => 'form-control')
+                    'options' => array('class' => 'input-xlarge')
                 ),
                 'city' => array(
                     'label' => 'J2STORE_ADDRESS_CITY',
                     'type' => 'text',
                     'name' => 'city',
                     'value' => $manufacturer_table->city,
-                    'options' => array('class' => 'form-control')
+                    'options' => array('class' => 'input-xlarge')
                 ),
                 'zip' => array(
                     'label' => 'J2STORE_ADDRESS_ZIP',
                     'type' => 'text',
                     'name' => 'zip',
                     'value' => $manufacturer_table->zip,
-                    'options' => array('class' => 'form-control')
+                    'options' => array('class' => 'input-xlarge')
                 ),
                 'phone_1' => array(
                     'label' => 'J2STORE_ADDRESS_PHONE',
                     'type' => 'text',
                     'name' => 'phone_1',
                     'value' => $manufacturer_table->phone_1,
-                    'options' => array('class' => 'form-control')
+                    'options' => array('class' => 'input-xlarge')
                 ),
                 'phone_2' => array(
                     'label' => 'J2STORE_ADDRESS_MOBILE',
                     'type' => 'text',
                     'name' => 'phone_2',
                     'value' => $manufacturer_table->phone_2,
-                    'options' => array('class' => 'form-control')
+                    'options' => array('class' => 'input-xlarge')
                 ),
                 'email' => array(
                     'label' => 'J2STORE_EMAIL',
                     'type' => 'email',
                     'name' => 'email',
                     'value' => $manufacturer_table->email,
-                    'options' => array('class' => 'form-control')
+                    'options' => array('class' => 'input-xlarge')
                 ),
             ),
         );
         $vars->field_sets[] = array(
             'id' => 'advanced_information',
-            'class' => array(
-	            $col_class.'6'
-            ),
-            'label' => 'J2STORE_ADDITIONAL_INFORMATION',
             'fields' => array(
                 'country_id' => array(
                     'label' => 'J2STORE_ADDRESS_COUNTRY',
@@ -129,7 +120,7 @@ class J2StoreControllerManufacturers extends F0FController
                     'type' => 'zone',
                     'name' => 'zone_id',
                     'value' => empty($manufacturer_table->zone_id) ? 1:$manufacturer_table->zone_id,
-                    'options' => array('class' => 'form-select','id' => 'zone_id')
+                    'options' => array('class' => 'input-xlarge','id' => 'zone_id')
                 ),
                 'enabled' => array(
                     'label' => 'J2STORE_ENABLED',
@@ -143,34 +134,21 @@ class J2StoreControllerManufacturers extends F0FController
                     'type' => 'modal_article',
                     'name' => 'brand_desc_id',
                     'value' => $manufacturer_table->brand_desc_id,
-                    'options' => array('class' => '')
+                    'options' => array('class' => 'input-xlarge')
                 ),
 
             )
         );
+       // echo "<pre>";print_r($manufacturer_table->zone_id);exit;
         echo $this->_getLayout('form', $vars,'edit');
-
-	    $wa = Factory::getApplication()->getDocument()->getWebAssetManager();
-	    $script = "
-			document.addEventListener('DOMContentLoaded', function() {
-			    var countryElement = document.getElementById('country_id');
-			    var zoneElement = document.getElementById('zone_id');
-			    if (countryElement) {
-			        countryElement.classList.add('form-select');
-			        countryElement.dispatchEvent(new Event('change'));
-			    }
-			    if (zoneElement) {
-			        zoneElement.classList.add('form-select');
-			        zoneElement.dispatchEvent(new Event('liszt:updated'));
-			    }
-			});
-			";
-	    $wa->addInlineScript($script, [], []);
-
+        echo '<script>
+            jQuery("#country_id").trigger("change");
+			jQuery("#zone_id").trigger("liszt:updated");
+             </script>';
     }
     public function browse()
     {
-        $app = Factory::getApplication();
+        $app = JFactory::getApplication();
         $model = $this->getThisModel();
         $state = array();
         $state['company'] = $app->input->getString('company','');
@@ -213,4 +191,5 @@ class J2StoreControllerManufacturers extends F0FController
         $vars->pagination = $model->getPagination();
         echo $this->_getLayout('default',$vars);
     }
+
 }

@@ -256,16 +256,6 @@ class J2Html
         return self::input('button', $name, $value, $options);
     }
 
-	/**
-	 * Create a button type field
-	 * @param string $name
-	 * @param string $value
-	 * @param array $options
-	 */
-	public static function buttontype($name, $value, $options = array())
-	{
-		return self::input('buttontype', $name, $value, $options);
-	}
 
     /**
      * Creates Media field
@@ -563,14 +553,6 @@ class J2Html
                 $html .= '  />';
                 break;
 
-	        case 'buttontype':
-		        $html .= '<button type="button" name="' . $name . '"  ' . $optionvalue;
-		        if (isset($options['onclick']) && !empty($options['onclick'])) {
-			        $html .= '   onclick ="' . $options['onclick'] . '"';
-		        }
-		        $html .= '>' . $value . '</button>';
-		        break;
-
             case 'submit':
                 $html .= '<input type="submit" name="' . $name . '"  ' . $optionvalue . 'value ="' . $value . '" />';
                 break;
@@ -611,6 +593,7 @@ class J2Html
 
         $platform = J2Store::platform();
         $platform->loadExtra('behavior.multiselect');
+        //$platform->loadExtra('formbehavior.chosen','select');
 
         // echo "<pre>";print_r($options);
         $id = isset($options['id']) && $options['id'] ? $options['id'] : $name;

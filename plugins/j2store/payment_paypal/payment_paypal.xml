@@ -11,6 +11,7 @@
 	<description>J2STORE_PAYPAL_PLUGINDESC</description>
 	<files>
 		<filename plugin="payment_paypal">payment_paypal.php</filename>
+		<filename>index.html</filename>
 		<folder>payment_paypal</folder>
 	</files>
 	<languages>

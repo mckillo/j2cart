@@ -37,7 +37,7 @@ class J2StoreControllerConfigurations extends F0FController
     function add()
     {
         $platform = J2Store::platform();
-
+        $platform->loadExtra('formbehavior.chosen', '.chosenselect');
         $platform->loadExtra('behavior.multiselect');
         $vars = $this->getBaseVars();
         $app = $platform->application();

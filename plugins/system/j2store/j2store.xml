@@ -11,6 +11,7 @@
     <description>System plugin that loads the required Javascript and other files required for J2Store.</description>
 	<files>
 		<filename plugin="j2store">j2store.php</filename>
+		<filename>index.html</filename>
 	</files>
 	<config>
 		<fields name="params">
