@@ -7,6 +7,8 @@
 // No direct access to this file
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Factory;
+
 /**
  * J2Store helper.
  */
@@ -263,7 +265,7 @@ class J2StoreHelperSelect {
 	}
 
 	public static function taxclass($default, $name) {
-		/* $db = JFactory::getDbo();
+		/* $db = Factory::getContainer()->get('DatabaseDriver');
 			$query = $db->getQuery(true);
 		$query->select('j2store_taxprofile_id as value, taxprofile_name as text')->from('#__j2store_taxprofiles')
 		->where('enabled=1');
@@ -328,7 +330,7 @@ class J2StoreHelperSelect {
 	{		$config = array('filter.published' => array(0, 1));
 			$extension ='com_content';
 			$config = (array) $config;
-			$db = JFactory::getDbo();
+            $db = Factory::getContainer()->get('DatabaseDriver');
 			$query = $db->getQuery(true)
 			->select('a.id, a.title, a.level, a.parent_id')
 			->from('#__categories AS a')

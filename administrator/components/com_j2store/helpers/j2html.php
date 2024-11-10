@@ -946,7 +946,7 @@ class J2Html
         $platform = J2Store::platform();
         $platform->loadExtra('behavior.multiselect');
         //$platform->loadExtra('formbehavior.chosen','select');
-        $db    = JFactory::getDbo();
+        $db = Factory::getContainer()->get('DatabaseDriver');
         $query = $db->getQuery(true);
         $query->select('a.id AS value, a.title AS text');
         $query->from('#__usergroups AS a');
@@ -1233,7 +1233,7 @@ jQuery('.modal-backdrop').remove();
         $urlSelect = $linkArticles . '&amp;function=jSelectJ2Article_' . $id;
         if ($value)
         {
-            $db    = JFactory::getDbo();
+            $db = Factory::getContainer()->get('DatabaseDriver');
             $query = $db->getQuery(true)
                 ->select($db->quoteName('title'))
                 ->from($db->quoteName('#__content'))

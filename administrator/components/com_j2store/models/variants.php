@@ -12,6 +12,8 @@
 // No direct access to this file
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Factory;
+
 require_once JPATH_ADMINISTRATOR.'/components/com_j2store/models/behavior/autoload.php';
 
 class J2StoreModelVariants extends F0FModel {
@@ -66,11 +68,11 @@ class J2StoreModelVariants extends F0FModel {
 
 			if (version_compare(JVERSION, '3.0', 'ge'))
 			{
-				$sets[$tableName] = $this->getDbo()->getTableColumns($tableName, true);
+				$sets[$tableName] = $this->getDatabase()->getTableColumns($tableName, true);
 			}
 			else
 			{
-				$fieldsArray = $this->getDbo()->getTableFields($tableName, true);
+				$fieldsArray = $this->getDatabase()->getTableFields($tableName, true);
 				$sets[$tableName] = array_shift($fieldsArray);
 			}
 		}
@@ -85,7 +87,7 @@ class J2StoreModelVariants extends F0FModel {
 	 * @param string $key
 	 */
 	public function getDimensions($table_name,$column ,$key){
-		$db= JFactory::getDbo();
+        $db = Factory::getContainer()->get('DatabaseDriver');
 		$table = '#__j2store_'.$table_name;
 		$query = $db->getQuery(true);
 		$query->select('*');
