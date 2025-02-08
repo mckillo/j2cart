@@ -1,31 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<extension version="2.5" type="plugin" group="system" method="upgrade">
-	<name>System - J2Store</name>
-	<author>Sasi varna kumar</author>
-	<creationDate>Jan 2012</creationDate>
-	<copyright>(C) 2010-2015 Weblogicx India Private Limited</copyright>
-	<license>https://www.gnu.org/licenses/gpl-3.0.html GNU/GPLv3 or later</license>
-	<authorEmail>support@j2store.org</authorEmail>
-	<authorUrl>www.j2store.org</authorUrl>
-	<version>2.0</version>
-    <description>System plugin that loads the required Javascript and other files required for J2Store.</description>
-	<files>
-		<filename plugin="j2store">j2store.php</filename>
-	</files>
-	<config>
-		<fields name="params">
-			<fieldset name="basic">
-				<field
-					name="is_change_filter_input"
-					type="radio"
-					default="1"
-					class="btn-group"
-					label="J2STORE_CHANGE_FILTER_INPUT_FIELD"
-					>
-					<option value="1">J2STORE_YES</option>
-					<option value="0">J2STORE_NO</option>
-				</field>
-			</fieldset>
-		</fields>
-	</config>
+<extension type="plugin" group="system" method="upgrade">
+  <name>System - J2Store</name>
+  <creationDate>Jan 2012</creationDate>
+  <author>J2Commerce</author>
+  <authorEmail>support@j2commerce.org</authorEmail>
+  <authorUrl>https://www.j2commerce.org</authorUrl>
+  <copyright>2025 J2Commerce, LLC</copyright>
+  <license>GNU General Public License v3 or later</license>
+  <version>4.0.11</version>
+  <description>System plugin that loads the required Javascript and other files required for J2Store.</description>
+  <files>
+    <filename plugin="j2store">j2store.php</filename>
+  </files>
+  <config>
+    <fields name="params">
+      <fieldset name="basic">
+        <field
+          name="is_change_filter_input"
+          type="radio"
+          label="J2STORE_CHANGE_FILTER_INPUT_FIELD"
+          default="1"
+          layout="joomla.form.field.radio.switcher"
+          >
+          <option value="0">JNO</option>
+          <option value="1">JYES</option>
+        </field>
+      </fieldset>
+    </fields>
+  </config>
 </extension>

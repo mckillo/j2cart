@@ -86,7 +86,7 @@ class J2Help {
 	    $html .= Text::_('J2STORE_TAKEOVER_INFO');
 	    $html .= '</p>';
 	    $html .= '<a class="btn btn-sm btn-dark text-light text-nowrap me-3" href="' . $url . '">' . Text::_('J2STORE_GOT_IT_AND_HIDE') . '</a>';
-	    $html .= '<a href="https://www.j2commerce.com" class="btn btn-sm btn-primary text-light text-nowrap me-3" title="'.Text::_('J2STORE_VISIT_J2COMMERCE').'" target="_blank"><span class="fas fa-solid fa-external-link-alt fa-arrow-up-right-from-square me-2"></span>'.Text::_('J2STORE_FIND_OUT_MORE').'</a>';
+	    $html .= '<a href="https://www.j2commerce.com/j2store" class="btn btn-sm btn-primary text-light text-nowrap me-3" title="'.Text::_('J2STORE_VISIT_J2COMMERCE').'" target="_blank"><span class="fas fa-solid fa-external-link-alt fa-arrow-up-right-from-square me-2"></span>'.Text::_('J2STORE_FIND_OUT_MORE').'</a>';
 	    $html .= '</div>';
 
 	    return $html;

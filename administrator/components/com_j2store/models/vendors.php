@@ -2,12 +2,15 @@
 /**
  * @package J2Store
  * @copyright Copyright (c)2014-17 Ramesh Elamathi / J2Store.org
+ * @copyright Copyright (c)2024 J2Commerce, LLC . All rights reserved.
  * @license GNU GPL v3 or later
  */
+
 // No direct access to this file
 defined('_JEXEC') or die;
 
 use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
 
 class J2StoreModelVendors extends F0FModel {
 
@@ -51,7 +54,9 @@ class J2StoreModelVendors extends F0FModel {
 
 	public function buildOrderbyQuery(&$query){
 		$state = $this->getState();
-		$app = JFactory::getApplication();
+
+		$app = Factory::getApplication();
+
         $db = Factory::getContainer()->get('DatabaseDriver');
 		$filter_order_Dir = $app->input->getString('filter_order_Dir','asc');
 		$filter_order = $app->input->getString('filter_order','j2store_vendor_id');
@@ -101,7 +106,7 @@ class J2StoreModelVendors extends F0FModel {
                 if(isset($error) && !empty($error)){
                     J2Store::platform()->application()->enqueueMessage($error,'error');
                 }else{
-                    $this->setError(JText::_("J2STORE_USER_ID_ALREADY_USED"));
+                    $this->setError(Text::_("J2STORE_USER_ID_ALREADY_USED"));
                 }
             }
         }

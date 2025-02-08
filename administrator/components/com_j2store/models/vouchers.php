@@ -2,12 +2,16 @@
 /**
  * @package J2Store
  * @copyright Copyright (c)2014-17 Ramesh Elamathi / J2Store.org
+ * @copyright Copyright (c)2024 J2Commerce, LLC . All rights reserved.
  * @license GNU GPL v3 or later
  */
+
 // No direct access to this file
 defined('_JEXEC') or die;
 
 use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Mail\MailerFactoryInterface;
 
 class J2StoreModelVouchers extends F0FModel {
 
@@ -35,7 +39,7 @@ class J2StoreModelVouchers extends F0FModel {
 			$status = true;
 		}
 		if(!$status) {
-			JFactory::getApplication()->enqueueMessage(JText::_('J2STORE_VOUCHER_DOES_NOT_EXIST'),'warning');
+			Factory::getApplication()->enqueueMessage(Text::_('J2STORE_VOUCHER_DOES_NOT_EXIST'),'warning');
 			$this->remove_voucher();
 		}
 		return $status;
@@ -99,11 +103,11 @@ class J2StoreModelVouchers extends F0FModel {
 			//allow plugins to run their own course.
 			$results = J2Store::plugin()->eventWithArray('VoucherIsValid', array($this));
 			if (in_array(false, $results, false)) {
-				throw new Exception( JText::_('J2STORE_VOUCHER_NOT_APPLICABLE'));
+				throw new Exception(Text::_('J2STORE_VOUCHER_NOT_APPLICABLE'));
 			}
 		} catch ( Exception $e ) {
 			$this->setError($e->getMessage());
-			JFactory::getApplication()->enqueueMessage($e->getMessage(),'warning');
+			Factory::getApplication()->enqueueMessage($e->getMessage(),'warning');
 			$this->remove_voucher();
 			return false;
 		}
@@ -120,11 +124,11 @@ class J2StoreModelVouchers extends F0FModel {
             //allow plugins to run their own course.
             $results = J2Store::plugin()->eventWithArray('VoucherIsValid', array($this));
             if (in_array(false, $results, false)) {
-                throw new Exception( JText::_('J2STORE_VOUCHER_NOT_APPLICABLE'));
+                throw new Exception(Text::_('J2STORE_VOUCHER_NOT_APPLICABLE'));
             }
         } catch ( Exception $e ) {
             $this->setError($e->getMessage());
-            JFactory::getApplication()->enqueueMessage($e->getMessage(),'warning');
+            Factory::getApplication()->enqueueMessage($e->getMessage(),'warning');
             $this->remove_voucher();
             return false;
         }
@@ -135,7 +139,7 @@ class J2StoreModelVouchers extends F0FModel {
 	private function validate_enabled() {
 		$params = J2Store::config();
 		if($params->get('enable_voucher', 0) == 0) {
-			throw new Exception( JText::_('J2STORE_VOUCHER_NOT_ENABLED') );
+			throw new Exception(Text::_('J2STORE_VOUCHER_NOT_ENABLED') );
 		}
 	}
 
@@ -144,7 +148,7 @@ class J2StoreModelVouchers extends F0FModel {
 	 */
 	private function validate_exists() {
 		if ( ! $this->voucher) {
-			throw new Exception( JText::_('J2STORE_VOUCHER_DOES_NOT_EXIST') );
+			throw new Exception(Text::_('J2STORE_VOUCHER_DOES_NOT_EXIST') );
 		}
 	}
 
@@ -155,7 +159,7 @@ class J2StoreModelVouchers extends F0FModel {
 		$total = $this->get_voucher_history($this->voucher->j2store_voucher_id);
 		$amount = $this->voucher->voucher_value - $total;
 		if ($amount <= 0) {
-			throw new Exception( JText::_('J2STORE_VOUCHER_USAGE_LIMIT_HAS_REACHED') );
+			throw new Exception(Text::_('J2STORE_VOUCHER_USAGE_LIMIT_HAS_REACHED') );
 		}
 
 	}
@@ -165,7 +169,7 @@ class J2StoreModelVouchers extends F0FModel {
         $total = $this->get_admin_voucher_history($this->voucher->j2store_voucher_id,$order_id);
         $amount = $this->voucher->voucher_value - $total;
         if ($amount <= 0) {
-            throw new Exception( JText::_('J2STORE_VOUCHER_USAGE_LIMIT_HAS_REACHED') );
+            throw new Exception(Text::_('J2STORE_VOUCHER_USAGE_LIMIT_HAS_REACHED') );
         }
     }
 
@@ -175,10 +179,10 @@ class J2StoreModelVouchers extends F0FModel {
     private function validate_expiry_date() {
         $db = Factory::getContainer()->get('DatabaseDriver');
         $nullDate = $db->getNullDate();
-        $tz = JFactory::getConfig()->get('offset');
-        $now = JFactory::getDate('now', $tz)->format('Y-m-d', true);
-        $valid_from = JFactory::getDate($this->voucher->valid_from, $tz)->format('Y-m-d', true);
-        $valid_to = JFactory::getDate($this->voucher->valid_to, $tz)->format('Y-m-d', true);
+        $tz = Factory::getApplication()->getConfig()->get('offset');
+        $now = Factory::getDate('now', $tz)->format('Y-m-d', true);
+        $valid_from = Factory::getDate($this->voucher->valid_from, $tz)->format('Y-m-d', true);
+        $valid_to = Factory::getDate($this->voucher->valid_to, $tz)->format('Y-m-d', true);
 
         if(
             ($this->voucher->valid_from == $nullDate || $valid_from <= $now) &&
@@ -186,7 +190,7 @@ class J2StoreModelVouchers extends F0FModel {
         ){
             return true;
         }else {
-            throw new Exception( JText::_('J2STORE_VOUCHER_EXPIRED'));
+            throw new Exception(Text::_('J2STORE_VOUCHER_EXPIRED'));
         }
     }
 
@@ -274,12 +278,7 @@ class J2StoreModelVouchers extends F0FModel {
 			$params = J2Store::config();
 
 			//sum of voucher history
-			/*$query = $db->getQuery(true)->select('SUM(discount_amount) as total')->from('#__j2store_orderdiscounts')
-														-> where('discount_entity_id='.$db->q($voucher->j2store_voucher_id))
-														->group('discount_entity_id');
-			$query->where('discount_type ='.$db->q('voucher'));
-			$voucher_history = $db->setQuery($query)->loadAssoc();*/
-			$voucher_total = $this->get_voucher_history ( $voucher->j2store_voucher_id );
+			$voucher_total = $this->get_voucher_history($voucher->j2store_voucher_id);
 			if ($voucher_total) {
 				$amount = $voucher->voucher_value - $voucher_total;
 			} else {
@@ -311,23 +310,23 @@ class J2StoreModelVouchers extends F0FModel {
 	}
 
 	public function sendVouchers($cids) {
-		$app = JFactory::getApplication ();
-		$config = JFactory::getConfig ();
+		$app = Factory::getApplication ();
+		$config = Factory::getApplication()->getConfig();
 		$params = J2Store::config ();
 
 		$sitename = $config->get ( 'sitename' );
 
-		$emailHelper = J2Store::email ();
+		$emailHelper = J2Store::email();
 
-		$mailfrom = $config->get ( 'mailfrom' );
-		$fromname = $config->get ( 'fromname' );
+		$mailfrom = $config->get('mailfrom');
+		$fromname = $config->get('fromname');
 
 		$failed = 0;
 		foreach ( $cids as $cid ) {
 			$voucherTable = F0FTable::getAnInstance ( 'Voucher', 'J2StoreTable' )->getClone ();
 			$voucherTable->load ( $cid );
 
-			$mailer = JFactory::getMailer ();
+			$mailer = Factory::getContainer()->get(MailerFactoryInterface::class)->createMailer();
 			$mailer->setSender ( array (
 					$mailfrom,
 					$fromname
@@ -341,11 +340,11 @@ class J2StoreModelVouchers extends F0FModel {
 			//Allow plugins to modify
 			J2Store::plugin ()->event ( 'BeforeSendVoucher', array ($voucherTable,&$mailer));
 			if($mailer->Send () !== true) {
-				$this->setError(JText::sprintf('J2STORE_VOUCHERS_SENDING_FAILED_TO_RECEIPIENT', $voucherTable->email_to));
+				$this->setError(Text::sprintf('J2STORE_VOUCHERS_SENDING_FAILED_TO_RECEIPIENT', $voucherTable->email_to));
 				$failed++;
 			}
 
-			J2Store::plugin ()->event ( 'AfterSendVoucher', array ($voucherTable,&$mailer));
+			J2Store::plugin()->event('AfterSendVoucher', array ($voucherTable,&$mailer));
 			$mailer = null;
 		}
 
@@ -356,7 +355,7 @@ class J2StoreModelVouchers extends F0FModel {
 
 	public function getVoucherHistory($id) {
 
-		$app = JFactory::getApplication();
+		$app = Factory::getApplication();
 
 		if($id < 1) return array();
 
@@ -382,7 +381,7 @@ class J2StoreModelVouchers extends F0FModel {
 	 * Clears the voucher from session
 	 * */
 	public function remove_voucher() {
-		JFactory::getSession()->clear('voucher', 'j2store');
+        Factory::getApplication()->getSession()->clear('voucher', 'j2store');
 		$cart_model = F0FModel::getTmpInstance('Carts', 'J2StoreModel');
         $cart_table = $cart_model->getCart();
 		if(isset( $cart_table->j2store_cart_id ) && !empty( $cart_table->j2store_cart_id )){
@@ -395,7 +394,7 @@ class J2StoreModelVouchers extends F0FModel {
 
 	public function set_voucher($post_voucher){
         J2Store::plugin()->event('BeforeSetVoucher',array(&$post_voucher));
-		$session = JFactory::getSession ();
+		$session = Factory::getApplication()->getSession();
 		$session->set('voucher', $post_voucher, 'j2store');
 
 		$cart_model = F0FModel::getTmpInstance('Carts', 'J2StoreModel');
@@ -412,19 +411,19 @@ class J2StoreModelVouchers extends F0FModel {
 		$cart_model = F0FModel::getTmpInstance('Carts', 'J2StoreModel');
         $cart_table = $cart_model->getCart();
 		if(isset( $cart_table->cart_voucher ) && !empty( $cart_table->cart_voucher ) ){
-			$session = JFactory::getSession ();
+			$session = Factory::getApplication()->getSession();
 			$session->set('voucher', $cart_table->cart_voucher, 'j2store');
 			$voucher_code = $cart_table->cart_voucher;
 
 		}else{
-			$session = JFactory::getSession ();
+			$session = Factory::getApplication()->getSession();
 			$voucher_code = $session->get ( 'voucher', '', 'j2store' );
 		}
 		return $voucher_code;
 	}
 
 	public function has_voucher(){
-		$session = JFactory::getSession ();
+		$session = Factory::getApplication()->getSession();
 		$cart_model = F0FModel::getTmpInstance('Carts', 'J2StoreModel');
         $cart_table = $cart_model->getCart();
 		if(isset( $cart_table->cart_voucher ) && !empty( $cart_table->cart_voucher ) ){

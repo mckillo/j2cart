@@ -55,10 +55,8 @@ $currency = J2Store::currency();
               action="<?php echo $form['action']; ?>" name="adminForm" id="adminForm">
             <div class="<?php echo $col_class; ?> 6">
                 <div class="<?php echo $col_class; ?> 12" style="margin-bottom: 10px; margin-left: 12px;">
-			<span class="<?php echo $col_class; ?> 6"> <label> <strong><?php echo JText::_('J2STORE_FILTER_SEARCH'); ?></strong>
-			</label> <input type="text" name="filter_search"
-                            value="<?php echo htmlspecialchars($vars->state->get('filter_search')); ?>"
-                            id="search"/>
+			<span class="<?php echo $col_class; ?> 6"> <label> <strong><?php echo JText::_('J2STORE_FILTER_PRODUCTS_SEARCH'); ?></strong>
+			</label> <input type="text" name="filter_search" value="<?php echo htmlspecialchars($vars->state->get('filter_search')); ?>" id="search"/>
 				<button class="btn btn-inverse"
                         onclick="document.getElementById('search').value='';jQuery('.csvdiv').html('');this.form.submit();">
 					<i class="icon icon-remove"></i>

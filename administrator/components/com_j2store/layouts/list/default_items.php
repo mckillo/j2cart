@@ -62,7 +62,7 @@ $cols_count = 0;
                         endif;?>
                         <?php if (isset($field['type']) && $field['type'] == 'rowselect'): ?>
                             <td class="text-center">
-                                <?php if((isset($item->orderstatus_core) && $item->orderstatus_core == 1) || (isset($item->field_core) && $item->field_core == 1)):?>
+                                <?php if(isset($item->orderstatus_core) && $item->orderstatus_core == 1):?>
                                 <?php else:?>
                                     <?php echo HTMLHelper::_('grid.id', $i, $item->$name) ?>
                                 <?php endif; ?>

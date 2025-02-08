@@ -322,7 +322,11 @@ class J2StoreHelperSelect {
 	{		$config = array('filter.published' => array(0, 1));
 			$extension ='com_content';
 			$config = (array) $config;
-			$db = Factory::getContainer()->get('DatabaseDriver');
+			if (version_compare(JVERSION, '3.99.99', 'lt')) {
+				$db = JFactory::getDbo();
+			} else {
+				$db = Factory::getContainer()->get('DatabaseDriver');
+			}
 			$query = $db->getQuery(true)
 			->select('a.id, a.title, a.level, a.parent_id')
 			->from('#__categories AS a')

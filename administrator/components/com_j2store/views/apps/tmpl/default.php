@@ -104,7 +104,7 @@ $session = Factory::getApplication()->getSession();
                         $app->published = $app->enabled;
                         Factory::getApplication()->getLanguage()->load('plg_j2store_' . $app->element, JPATH_ADMINISTRATOR);
                         $params = $platform->getRegistry($app->manifest_cache);
-                        $desc = $params->get('description');
+	                    $desc = Text::_($params->get('description'));
 
 	                    $imageExtensions = ['jpg', 'png', 'webp'];
 	                    $imagePath = '';
