@@ -11,8 +11,6 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Uri\Uri;
 
-use Joomla\CMS\Factory;
-
 class J2StoreModelProductsBehaviorFlexiVariable extends F0FModelBehavior {
 
     private $_rawData = array();
