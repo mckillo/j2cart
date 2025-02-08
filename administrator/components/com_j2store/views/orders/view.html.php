@@ -1,11 +1,16 @@
 <?php
 /**
- * @package J2Store
+ * @package Joomla.Administrator
+ * @subpackage com_j2store
  * @copyright Copyright (c)2014-17 Ramesh Elamathi / J2Store.org
+ * @copyright Copyright (c) 2024 J2Commerce . All rights reserved.
  * @license GNU GPL v3 or later
  */
+
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
+
+use Joomla\CMS\Factory;
 
 class J2StoreViewOrders extends F0FViewHtml
 {
@@ -36,7 +41,7 @@ class J2StoreViewOrders extends F0FViewHtml
 		// Load the model
 		$model = $this->getModel();
 
-		$app = JFactory::getApplication();
+		$app = Factory::getApplication();
 		$state = array();
 		$state['search'] = $app->input->getString('search',  $model->getState('search', ''));
 		$state['since'] = $app->input->get('since', $model->getState('since', ''));
@@ -53,25 +58,19 @@ class J2StoreViewOrders extends F0FViewHtml
 		foreach($state as $key => $value){
 			$model->setState($key,$value);
 		}
-		// ...ordering
-		/* $this->lists->set('order', $model->getState('filter_order', 'id', 'cmd'));
-		$this->lists->set('order_Dir', $model->getState('filter_order_Dir', 'DESC', 'cmd'));
- */
+
 		// Assign data to the view
 		$this->items      = $model->getOrderList();
 		$this->pagination = $model->getPagination();
 		// Pass page params on frontend only
 		if (F0FPlatform::getInstance()->isFrontend())
 		{
-			$params = JFactory::getApplication()->getParams();
+			$params = Factory::getApplication()->getParams();
 			$this->params = $params;
 		}
-
-
 			$state = $model->getState();
 			$this->state = $state;
 			$this->currency = J2Store::currency();
 			return true;
 		}
-
 }

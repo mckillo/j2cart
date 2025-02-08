@@ -1,11 +1,20 @@
 <?php
 /**
- * @package J2Store
+ * @package     Joomla.Plugin
+ * @subpackage  J2Store.app_bootstrap4
+ *
  * @copyright Copyright (c)2014-17 Ramesh Elamathi / J2Store.org
- * @license GNU GPL v3 or later
+ * @copyright Copyright (C) 2025 J2Commerce, LLC. All rights reserved.
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GNU/GPLv3 or later
+ * @website https://www.j2commerce.com
  */
 /** ensure this file is being included by a parent file */
 defined('_JEXEC') or die('Restricted access');
+use Joomla\CMS\Factory;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Toolbar\ToolbarHelper;
+
 require_once(JPATH_ADMINISTRATOR.'/components/com_j2store/library/plugins/app.php');
 class plgJ2StoreApp_bootstrap4 extends J2StoreAppPlugin
 {
@@ -44,8 +53,8 @@ class plgJ2StoreApp_bootstrap4 extends J2StoreAppPlugin
     function viewList()
     {
         $app = J2Store::platform()->application();
-        JToolBarHelper::title(JText::_('J2STORE_APP').'-'.JText::_('PLG_J2STORE_'.strtoupper($this->_element)),'j2store-logo');
-        JToolBarHelper::back('J2STORE_BACK_TO_DASHBOARD', 'index.php?option=com_j2store');
+        ToolBarHelper::title(Text::_('J2STORE_APP').'-'.Text::_('PLG_J2STORE_'.strtoupper($this->_element)),'j2store-logo');
+        ToolBarHelper::back('J2STORE_BACK_TO_DASHBOARD', 'index.php?option=com_j2store');
         $vars = new \stdClass();
         $id = $app->input->getInt('id', '0');
         $vars->id = $id;

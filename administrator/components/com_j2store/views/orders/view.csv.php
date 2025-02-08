@@ -1,11 +1,16 @@
 <?php
 /**
- * @package J2Store
+ * @package Joomla.Administrator
+ * @subpackage com_j2store
  * @copyright Copyright (c)2014-17 Ramesh Elamathi / J2Store.org
+ * @copyright Copyright (c) 2024 J2Commerce . All rights reserved.
  * @license GNU GPL v3 or later
  */
+
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
+
+use Joomla\CMS\Factory;
 
 class J2StoreViewOrders extends F0FViewCsv
 {public function __construct($config = array())
@@ -18,7 +23,7 @@ class J2StoreViewOrders extends F0FViewCsv
 	{
 		// Load the model
 		//$model = $this->getModel();
-		$app = JFactory::getApplication();
+		$app = Factory::getApplication();
 		$platform = F0FPlatform::getInstance();
 		$document = $platform->getDocument();
 		$model = $this->getModel();

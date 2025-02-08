@@ -109,7 +109,11 @@ $menus = array (
 $j2StorePlugin = \J2Store::plugin();
 $j2StorePlugin->event('AddDashboardMenuInJ2Store',array(&$menus));
 // Get installed version
-$db    = Factory::getContainer()->get(DatabaseDriver::class);
+if (version_compare(JVERSION, '3.99.99', 'lt')) {
+	$db = JFactory::getDbo();
+} else {
+	$db = Factory::getContainer()->get('DatabaseDriver');
+}
 $query = $db->getQuery(true);
 $query->select($db->quoteName('manifest_cache'))->from($db->quoteName('#__extensions'))->where($db->quoteName('element').' = '.$db->quote('com_j2store'));
 $query->where('type ='.$db->q('component'));

@@ -27,7 +27,11 @@ class JFormFieldTagTemplateList extends ListField {
 	public function getInput() {
 
 		$fieldName = $this->name;
-		$db = Factory::getContainer()->get('DatabaseDriver');
+		if (version_compare(JVERSION, '3.99.99', 'lt')) {
+			$db = JFactory::getDbo();
+		} else {
+			$db = Factory::getContainer()->get('DatabaseDriver');
+		}
 
 		// Query to get the default template
 		$query = $db->getQuery(true)

@@ -82,7 +82,11 @@ class J2StoreControllerProductsBase extends F0FController
     public function getRelatedProducts()
     {
         $app = J2Store::platform()->application();
-        $db = Factory::getContainer()->get('DatabaseDriver');
+	    if (version_compare(JVERSION, '3.99.99', 'lt')) {
+		    $db = JFactory::getDbo();
+	    } else {
+		    $db = Factory::getContainer()->get('DatabaseDriver');
+	    }
         $q = $app->input->post->get('q', '', 'string');
         $ignore_product_id = $app->input->getInt('product_id');
         $json = array();
@@ -259,7 +263,11 @@ class J2StoreControllerProductsBase extends F0FController
         $platform = J2Store::platform();
         $app = $platform->application();
         $fof_helper = J2Store::fof();
-	    $db = Factory::getContainer()->get('DatabaseDriver');
+	    if (version_compare(JVERSION, '3.99.99', 'lt')) {
+		    $db = JFactory::getDbo();
+	    } else {
+		    $db = Factory::getContainer()->get('DatabaseDriver');
+	    }
         $data = $app->input->getArray($_POST);
 
         if (isset($data['product_optionvalue_attribs'])) {
@@ -408,7 +416,11 @@ class J2StoreControllerProductsBase extends F0FController
         $product_id = $app->input->getInt('product_id');
         $productoption_id = $app->input->getInt('productoption_id');
         if ($product_id && $productoption_id && $pov_id) {
-	        $db = Factory::getContainer()->get('DatabaseDriver');
+	        if (version_compare(JVERSION, '3.99.99', 'lt')) {
+		        $db = JFactory::getDbo();
+	        } else {
+		        $db = Factory::getContainer()->get('DatabaseDriver');
+	        }
             $query = $db->getQuery(true)->update('#__j2store_product_optionvalues')->set('product_optionvalue_default=0')
                 ->where('productoption_id=' . $db->q($productoption_id));
             $db->setQuery($query)->execute();
@@ -1006,7 +1018,11 @@ class J2StoreControllerProductsBase extends F0FController
             $filter_id = $app->input->getString('filter_pid', '');
             $product_list = array();
 
-            $db = Factory::getContainer()->get('DatabaseDriver');
+	        if (version_compare(JVERSION, '3.99.99', 'lt')) {
+		        $db = JFactory::getDbo();
+	        } else {
+		        $db = Factory::getContainer()->get('DatabaseDriver');
+	        }
             $query = $db->getQuery(true)->select('pa.product_id')->from('#__j2store_product_options AS pa')
                 ->where('pa.product_id !=' . $db->q($product_id))
                 ->group('pa.product_id')

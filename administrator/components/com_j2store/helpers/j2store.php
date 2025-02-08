@@ -142,7 +142,7 @@ class J2Store
 			$source = 'pro';
 		}
 		$utm_query ='?utm_source='.$source.'&utm_medium=component&utm_campaign=inline&utm_content='.$content;
-		$domain = 'https://www.j2store.org';
+		$domain = 'https://www.j2commerce.com';
 
 		$fullurl = $domain.'/'.$url.$utm_query;
 		return $fullurl;

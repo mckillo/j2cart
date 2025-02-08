@@ -3,16 +3,14 @@
  * --------------------------------------------------------------------------------
  * Module - Stats
  * --------------------------------------------------------------------------------
- * @package     Joomla 5.x
- * @subpackage  J2 Store
+ * @package     Joomla.Administrator
+ * @subpackage  mod_j2store_stats
  * @copyright   Copyright (c)2014-17 Ramesh Elamathi / J2Store.org
  * @copyright   Copyright (c) 2024 J2Commerce . All rights reserved.
  * @license     GNU GPL v3 or later
  * @link        https://www.j2commerce.com
  * --------------------------------------------------------------------------------
- *
- * */
-
+ */
 
 defined('_JEXEC') or die;
 use Joomla\CMS\Factory;
@@ -25,7 +23,7 @@ $order_status = $params->get('order_status',array('*'));
 <div class="j2store_statistics">
     <div class="card mb-3">
         <div class="card-header">
-            <h2 class="h3 mb-0"><i class="fas fa-solid fa-line-chart me-2"></i><?php echo Text::_('J2STORE_ORDER_STATISTICS');?></h2>
+            <h2 class="h3 mb-0"><i class="fas fa-solid fa-chart-bar me-2"></i><?php echo Text::_('J2STORE_ORDER_STATISTICS');?></h2>
         </div>
         <div class="card-body p-0">
             <table class="table mb-0" id="j2commerce<?php echo $module->id;?>">

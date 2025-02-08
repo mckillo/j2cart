@@ -102,8 +102,8 @@ CREATE TABLE IF NOT EXISTS `#__j2store_coupons` (
   `products` varchar(255) NOT NULL,
   `min_subtotal` varchar(255) NOT NULL,
   `users` text NOT NULL,
-  `mycategory` text NOT NULL, 
-  `brand_ids` text NOT NULL, 
+  `mycategory` text NOT NULL,
+  `brand_ids` text NOT NULL,
   PRIMARY KEY (`j2store_coupon_id`),
   UNIQUE KEY `coupon_code` (`coupon_code`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
@@ -220,7 +220,7 @@ CREATE TABLE IF NOT EXISTS `#__j2store_geozonerules` (
   `j2store_geozonerule_id` int(11) NOT NULL AUTO_INCREMENT,
   `geozone_id` int(11) NOT NULL,
   `country_id` int(11) NOT NULL,
-  `zone_id` int(11) NOT NULL,  
+  `zone_id` int(11) NOT NULL,
   PRIMARY KEY (`j2store_geozonerule_id`),
   UNIQUE KEY `georule` (`geozone_id`,`country_id`,`zone_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
@@ -255,7 +255,7 @@ CREATE TABLE IF NOT EXISTS `#__j2store_filters` (
 CREATE TABLE IF NOT EXISTS `#__j2store_geozones` (
   `j2store_geozone_id` int(11) NOT NULL AUTO_INCREMENT,
   `geozone_name` varchar(255) NOT NULL,
-  `enabled` int(11) NOT NULL,  
+  `enabled` int(11) NOT NULL,
   PRIMARY KEY (`j2store_geozone_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 
@@ -438,7 +438,7 @@ CREATE TABLE IF NOT EXISTS `#__j2store_orderitemattributes` (
   `orderitemattribute_name` varchar(255) NOT NULL,
   `orderitemattribute_value` varchar(255) NOT NULL,
   `orderitemattribute_prefix` varchar(1) NOT NULL,
-  `orderitemattribute_price` decimal(12,5) NOT NULL,
+  `orderitemattribute_price` decimal(12,4) NOT NULL,
   `orderitemattribute_code` varchar(255) NOT NULL,
   `orderitemattribute_type` varchar(255) NOT NULL,
   PRIMARY KEY (`j2store_orderitemattribute_id`),
@@ -463,7 +463,7 @@ CREATE TABLE IF NOT EXISTS `#__j2store_orderitems` (
   `orderitem_tax` decimal(12,4) NOT NULL,
   `orderitem_discount` decimal(12,4) NOT NULL,
   `orderitem_discount_tax` decimal(12,4) NOT NULL,
-  `orderitem_price` decimal(12,5) NOT NULL,
+  `orderitem_price` decimal(12,4) NOT NULL,
   `orderitem_option_price` decimal(12,4) NOT NULL,
   `orderitem_finalprice` decimal(12,4) NOT NULL,
   `orderitem_finalprice_with_tax` decimal(12,4) NOT NULL,
@@ -529,7 +529,7 @@ CREATE TABLE IF NOT EXISTS `#__j2store_ordershippings` (
   `ordershipping_extra` decimal(15,5) DEFAULT '0.00000',
   `ordershipping_tracking_id` mediumtext NOT NULL,
   PRIMARY KEY (`j2store_ordershipping_id`),
-  KEY `idx_order_shipping_order_id` (`order_id`)  
+  KEY `idx_order_shipping_order_id` (`order_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `#__j2store_orderstatuses` (
@@ -672,7 +672,7 @@ CREATE TABLE IF NOT EXISTS `#__j2store_product_options` (
 CREATE TABLE IF NOT EXISTS `#__j2store_product_optionvalues` (
   `j2store_product_optionvalue_id` int(11) NOT NULL AUTO_INCREMENT,
   `productoption_id` int(11) NOT NULL,
-  `optionvalue_id` int(11) NOT NULL,
+  `optionvalue_id` int(11) NULL DEFAULT NULL,
   `parent_optionvalue` text NOT NULL,
   `product_optionvalue_price` decimal(15,8) NOT NULL,
   `product_optionvalue_prefix` varchar(255) NOT NULL,
@@ -681,7 +681,7 @@ CREATE TABLE IF NOT EXISTS `#__j2store_product_optionvalues` (
   `product_optionvalue_sku` varchar(255) NOT NULL,
   `product_optionvalue_default` int(11) NOT NULL,
   `product_optionvalue_attribs` text NOT NULL,
-  PRIMARY KEY (`j2store_product_optionvalue_id`)  
+  PRIMARY KEY (`j2store_product_optionvalue_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -701,7 +701,7 @@ CREATE TABLE IF NOT EXISTS `#__j2store_product_prices` (
   `price` decimal(15,5) DEFAULT NULL,
   `params` text,
   PRIMARY KEY (`j2store_productprice_id`),
-  KEY `price_variant_id` (`variant_id`)  
+  KEY `price_variant_id` (`variant_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `#__j2store_productprice_index` (
@@ -746,10 +746,10 @@ CREATE TABLE IF NOT EXISTS `#__j2store_shippingrates` (
   `j2store_shippingrate_id` int(11) NOT NULL AUTO_INCREMENT,
   `shipping_method_id` int(11) NOT NULL,
   `geozone_id` int(11) NOT NULL,
-  `shipping_rate_price` decimal(12,5) NOT NULL,
+  `shipping_rate_price` decimal(12,4) NOT NULL,
   `shipping_rate_weight_start` decimal(11,3) NOT NULL,
   `shipping_rate_weight_end` decimal(11,3) NOT NULL,
-  `shipping_rate_handling` decimal(12,5) NOT NULL,
+  `shipping_rate_handling` decimal(12,4) NOT NULL,
   `created_date` datetime NOT NULL COMMENT 'GMT Only',
   `modified_date` datetime NOT NULL COMMENT 'GMT Only',
   PRIMARY KEY (`j2store_shippingrate_id`)
@@ -796,7 +796,7 @@ CREATE TABLE IF NOT EXISTS `#__j2store_taxrules` (
   `taxprofile_id` int(11) NOT NULL,
   `taxrate_id` int(11) NOT NULL,
   `address` varchar(255) NOT NULL,
-  `ordering` int(11) NOT NULL,  
+  `ordering` int(11) NOT NULL,
    PRIMARY KEY (`j2store_taxrule_id`),
    UNIQUE KEY (`taxprofile_id`, `taxrate_id`, `address`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ;
@@ -831,7 +831,7 @@ CREATE TABLE IF NOT EXISTS `#__j2store_variants` (
   `height` decimal(15,5) DEFAULT NULL,
   `length_class_id` int(11) DEFAULT NULL,
   `weight` decimal(15,5) DEFAULT NULL,
-  `weight_class_id` int(11) DEFAULT NULL,  
+  `weight_class_id` int(11) DEFAULT NULL,
   `created_on` varchar(255) DEFAULT NULL,
   `created_by` int(11) DEFAULT NULL,
   `modified_on` varchar(45) DEFAULT NULL,
@@ -847,7 +847,7 @@ CREATE TABLE IF NOT EXISTS `#__j2store_variants` (
   `notify_qty` decimal(15,5) DEFAULT NULL,
   `use_store_config_notify_qty` int(11) DEFAULT NULL,
   `availability` int(11) DEFAULT NULL,
-  `allow_backorder` int(11) NOT NULL,  
+  `allow_backorder` int(11) NOT NULL,
   `isdefault_variant` int(11) NOT NULL,
   PRIMARY KEY (`j2store_variant_id`),
   KEY `variant_product_id` (`product_id`)

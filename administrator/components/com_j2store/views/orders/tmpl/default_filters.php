@@ -2,70 +2,60 @@
 /**
  * @package J2Store
  * @copyright Copyright (c)2014-17 Ramesh Elamathi / J2Store.org
+ * @copyright Copyright (c) 2024 J2Commerce . All rights reserved.
  * @license GNU GPL v3 or later
  */
+
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
+
+use Joomla\CMS\Language\Text;
+
+
 $platform = J2Store::platform();
 $platform->loadExtra('behavior.modal');
 $secondary_button = 'btn btn-dark';
 if (version_compare(JVERSION, '3.99.99', 'lt')) {
 $secondary_button = 'btn btn-inverse';
 }
+$search = htmlspecialchars($this->state->search);
 ?>
-<table class="adminlist table table-striped table-condensed">
-    <tr>
-        <td>
-            <?php echo J2Html::button('reset', JText::_('J2STORE_FILTER_RESET_ALL'), array('id' => 'reset-filter', 'class' => $secondary_button)); ?>
-        </td>
-        <td colspan="2">
-            <?php if (($this->state->since) || ($this->state->until) || ($this->state->paykey) || ($this->state->moneysum) || ($this->state->toinvoice) || ($this->state->coupon_code) || ($this->state->user_id)) : ?>
-                <input id="hideBtnAdvancedControl" class="<?php echo $secondary_button ?>" type="button"
-                       onclick="jQuery('#advanced-search-controls').toggle('click');jQuery(this).toggle('click');jQuery('#showBtnAdvancedControl').toggle('click');"
-                       value="<?php echo JText::_('J2STORE_HIDE_FILTER_ADVANCED') ?>"/>
-                <input id="showBtnAdvancedControl" class="btn btn-success" type="button"
-                       onclick="jQuery('#advanced-search-controls').toggle('click');jQuery(this).toggle('click');jQuery('#hideBtnAdvancedControl').toggle('click');"
-                       value="<?php echo JText::_('J2STORE_SHOW_FILTER_ADVANCED') ?>" style="display:none;"/>
-            <?php else: ?>
-                <input id="hideBtnAdvancedControl" class="<?php echo $secondary_button ?>" type="button"
-                       onclick="jQuery('#advanced-search-controls').toggle('click');jQuery(this).toggle('click');jQuery('#showBtnAdvancedControl').toggle('click');"
-                       value="<?php echo JText::_('J2STORE_HIDE_FILTER_ADVANCED') ?>" style="display:none;"/>
-                <input id="showBtnAdvancedControl" class="btn btn-success" type="button"
-                       onclick="jQuery('#advanced-search-controls').toggle('click');jQuery(this).toggle('click');jQuery('#hideBtnAdvancedControl').toggle('click');"
-                       value="<?php echo JText::_('J2STORE_SHOW_FILTER_ADVANCED') ?>"/>
-            <?php endif; ?>
-        </td>
-    </tr>
-    <tr>
-        <td align="left" width="100%"><?php echo JText::_('J2STORE_FILTER_SEARCH'); ?>:
-            <?php $search = htmlspecialchars($this->state->search); ?>
-            <?php echo J2Html::text('search', $search, array('id' => 'search', 'class' => 'input j2store-order-filters')); ?>
-            <?php echo J2Html::button('go', JText::_('J2STORE_FILTER_GO'), array('class' => 'btn btn-success', 'onclick' => 'this.form.submit();')); ?>
-            <?php echo J2Html::button('reset', JText::_('J2STORE_FILTER_RESET'), array('id' => 'reset-filter-search', 'class' => $secondary_button)); ?>
-        </td>
-
-        <td nowrap="nowrap">
-            <?php echo JText::_('J2STORE_FILTER_ORDER_STATUS'); ?>:
-            <?php
-            echo J2Html::select()
-                ->type('genericlist')
-                ->name('orderstate')
-                ->value($this->state->orderstate)
-                ->attribs(array('onchange' => 'this.form.submit();', 'class' => 'input j2store-order-filters'))
-                ->setPlaceHolders(array('' => JText::_('J2STORE_SELECT_OPTION')))
-                ->hasOne('Orderstatuses')
-                ->ordering('ordering')
-                ->setRelations(
-                    array(
-                        'fields' => array
-                        (
-                            'key' => 'j2store_orderstatus_id',
-                            'name' => 'orderstatus_name'
-                        )
-                    )
-                )->getHtml();
-            ?>
-        </td>
-        <td><?php echo $this->pagination->getLimitBox(); ?></td>
-    </tr>
-</table>
+<div class="btn-toolbar w-100 justify-content-end mb-3">
+    <div class="filter-search-bar btn-group flex-grow-1 flex-lg-grow-0 mb-2 mb-lg-0">
+        <div class="input-group w-100">
+		    <?php echo J2Html::text('search',$search,array('id'=>'search' ,'class'=>'form-control j2store-product-filters','placeholder'=>Text::_( 'J2STORE_FILTER_SEARCH' )));?>
+            <span class="filter-search-bar__label visually-hidden">
+                <label id="search-lbl" for="search"><?php echo Text::_( 'J2STORE_FILTER_SEARCH' ); ?></label>
+            </span>
+		    <?php echo J2Html::buttontype('go','<span class="filter-search-bar__button-icon icon-search" aria-hidden="true"></span>' ,array('class'=>'btn btn-primary','onclick'=>'this.form.submit();'));?>
+	        <?php echo J2Html::buttontype('reset', Text::_('JCLEAR'), array('id' => 'reset-filter-search', 'class' => 'btn btn-primary d-inline-block d-lg-none')); ?>
+        </div>
+    </div>
+    <div class="filter-search-actions btn-group ms-lg-2 flex-grow-1 flex-lg-grow-0 mb-2 mb-lg-0">
+        <button type="button" class="filter-search-actions__button btn btn-primary js-stools-btn-filter w-100" data-bs-toggle="collapse" data-bs-target="#collapseFilters" aria-expanded="false" aria-controls="collapseFilters">
+            <?php echo Text::_('JFILTER_OPTIONS');?><span class="icon-angle-down ms-1" aria-hidden="true"></span>
+        </button>
+		<?php echo J2Html::buttontype('reset',Text::_( 'JCLEAR' ),array('id'=>'reset-filter','class'=>'btn btn-primary'));?>
+    </div>
+    <div class="ordering-select d-flex gap-2 ms-lg-2 flex-grow-1 flex-lg-grow-0">
+	    <?php echo J2Html::select()
+		    ->type('genericlist')
+		    ->name('orderstate')
+		    ->value($this->state->orderstate)
+		    ->attribs(array('onchange' => 'this.form.submit();', 'class' => 'form-select j2store-product-filters w-100'))
+		    ->setPlaceHolders(array('' => Text::_('J2STORE_SELECT_STATUS')))
+		    ->hasOne('Orderstatuses')
+		    ->ordering('ordering')
+		    ->setRelations(
+			    array(
+				    'fields' => array
+				    (
+					    'key' => 'j2store_orderstatus_id',
+					    'name' => 'orderstatus_name'
+				    )
+			    )
+		    )->getHtml();
+	    ?>
+		<?php echo $this->pagination->getLimitBox(); ?>
+    </div>
+</div>

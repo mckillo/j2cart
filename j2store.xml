@@ -6,9 +6,9 @@
 	<copyright>Copyright (c) 2024 J2Commerce. All rights reserved.</copyright>
 	<authorEmail>support@j2commerce.com</authorEmail>
 	<authorUrl>https://j2commerce.com</authorUrl>
-	<version>4.0.7</version>
+	<version>4.0.12</version>
 	<license>https://www.gnu.org/licenses/gpl-3.0.html GNU/GPLv3 or later</license>
-	<description><![CDATA[<h3>J2Store V4 Professional</h3>
+	<description><![CDATA[<h3>J2Commerce V4 Professional</h3>
       		Flexible and native Joomla shopping cart solution. <br>
       		Use Joomla articles as products and get your shop online in less than 10 minutes. <br>
       		Start setting up your store now. <br>
@@ -38,6 +38,12 @@
 		</sql>
 	</install>
 
+	<update>
+		<schemas>
+			<schemapath type="mysql">sql/updates/mysql</schemapath>
+		</schemas>
+	</update>
+
 	<!-- Media files -->
 	<media destination="j2store" folder="media/j2store">
 		<folder>fonts</folder>
@@ -49,7 +55,7 @@
 	<!-- Administrator back-end section -->
 	<administration>
 		<!-- Administration menu -->
-		<menu view="cpanel">J2Store</menu>
+		<menu view="cpanel">COM_J2STORE</menu>
 
 		<!-- Back-end files -->
 		<files folder="administrator/components/com_j2store">
@@ -60,8 +66,8 @@
 			<folder>helpers</folder>
 			<folder>models</folder>
 			<folder>tables</folder>
-            		<folder>fof</folder>
-            		<folder>layouts</folder>
+			<folder>fof</folder>
+			<folder>layouts</folder>
 			<filename>access.xml</filename>
 			<filename>config.xml</filename>
 			<filename>fof.xml</filename>

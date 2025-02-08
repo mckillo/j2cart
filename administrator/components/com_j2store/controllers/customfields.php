@@ -71,6 +71,57 @@ class J2StoreControllerCustomfields extends F0FController
         $vars->pagination = $model->getPagination();
         echo $this->_getLayout('default',$vars);
     }
+        
+    /**
+     * Delete selected item(s)
+     *
+     * @return  bool
+     */
+    public function remove()
+    {
+        $some_core_fields = false;
+        $no_core_deleted = false;
+        $deletion_status = true;
+        
+        // Initialise the App variables
+        $app = JFactory::getApplication();
+        $cids = $app->input->get('cid',array(),'array');
+        if (!empty($cids)) {
+            $model = $this->getThisModel();
+            foreach ($cids as $cid) {
+				$item = $model->getItem($cid);
+				if (!$item->get('field_core', 1)) {
+				    $field = F0FTable::getInstance('Customfields', 'J2StoreTable')->getClone();
+				    if (!$field->delete($cid)) {
+				        $deletion_status = false;
+				        break;
+				    }
+				    $no_core_deleted = true;
+				} else {
+				    $some_core_fields = true;
+				}
+            }
+        }
+        
+        if ($some_core_fields) {
+            if ($no_core_deleted) {
+                $msg = JText::_('J2STORE_CUSTOM_FIELD_DELETED_BUT_NOT_CORE_FIELDS');
+            } else {
+                $msg = JText::_('J2STORE_CUSTOM_FIELD_CANNOT_DELETE_CORE_FIELDS');
+            }            
+        } else {
+            $msg = JText::_('J2STORE_ITEMS_DELETED');
+        }
+        
+        $link = 'index.php?option=com_j2store&view=customfields';
+                
+        if (!$deletion_status) {
+            $this->setRedirect($link, JText::_('J2STORE_CUSTOM_FIELD_DELETED_ERROR'), 'error');
+        } else {
+			$this->setRedirect($link, $msg);
+        }
+    }
+
 	/**
 	 * Makes a customfield required
 	 */
