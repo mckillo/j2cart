@@ -11,11 +11,13 @@
 
 defined ( '_JEXEC' ) or die ( 'Restricted access' );
 
+use Joomla\CMS\Factory;
+
 class J2StoreModelCallback extends F0FModel {
 
 	function runCallback($method) {
 
-		$app = JFactory::getApplication ();
+		$app = Factory::getApplication ();
 		$rawDataPost = $app->input->getArray($_POST);
 		$rawDataGet = $app->input->getArray($_GET);
 		$data = array_merge ( $rawDataGet, $rawDataPost );

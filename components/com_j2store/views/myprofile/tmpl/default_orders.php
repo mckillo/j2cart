@@ -6,8 +6,11 @@
  */
 // No direct access to this file
 defined('_JEXEC') or die;
+
+use Joomla\CMS\Factory;
+
 $currency = J2Store::currency();
-$doc = JFactory::getDocument();
+$doc = Factory::getApplication()->getDocument();
 J2Store::strapper()->addFontAwesome();
 ?>
 

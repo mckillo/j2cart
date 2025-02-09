@@ -9,6 +9,7 @@
 # Technical Support:  Forum - http://j2store.org/forum/index.html
 -------------------------------------------------------------------------*/
 
+use Joomla\CMS\Factory;
 
 /** ensure this file is being included by a parent file */
 defined('_JEXEC') or die('Restricted access');
@@ -31,7 +32,7 @@ class J2StoreControllerCallback extends F0FController
 		// Makes sure SiteGround's SuperCache doesn't cache the subscription page
 		J2Store::utilities()->nocache();
 		
-		$app = JFactory::getApplication();
+		$app = Factory::getApplication();
 		$app->setHeader('X-Cache-Control', 'False', true);
 		$method = $app->input->getCmd('method', 'none');
 		$model = $this->getModel('Callback');		

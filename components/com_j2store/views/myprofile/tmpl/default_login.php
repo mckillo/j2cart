@@ -11,6 +11,9 @@
 
 // no direct access
 defined('_JEXEC') or die('Restricted access');
+
+use Joomla\CMS\Factory;
+
 $platform = J2Store::platform();
 $return_url = $platform->getMyprofileUrl(array(),false,true);
 //$return_url = trim(JUri::root(),'/').$platform->getMyprofileUrl();
@@ -21,7 +24,7 @@ $return_url = $platform->getMyprofileUrl(array(),false,true);
 $guest_action_url = $platform->getMyprofileUrl(array('task' => 'guestentry'));
 //JRoute::_( "index.php?option=com_j2store&view=myprofile&task=guestentry" );
 $platform->addScript('j2store-jquery-validate','/media/j2store/js/jquery.validate.min.js');
-//$document =JFactory::getDocument();
+//$document = Factory::getApplication()->getDocument();
 //$document->addScript(JURI::root(true).'/media/j2store/js/jquery.validate.min.js');
 $params = J2Store::config();
 // get j2Store Params to determine which bootstrap version we're using - Waseem Sadiq (waseem@bulletprooftemplates.com)
@@ -63,7 +66,7 @@ $J2gridCol = ($params->get('bootstrap_version', 2) == 2) ? 'span' : 'col-md-';
 					' JLanguage.LOGIN_WITH_OPENID = \''.JText::_( 'LOGIN_WITH_OPENID' ).'\';'.
 					' JLanguage.NORMAL_LOGIN = \''.JText::_( 'NORMAL_LOGIN' ).'\';'.
 					' var modlogin = 1;';
-//			$document = JFactory::getDocument();
+//			$document = Factory::getApplication()->getDocument();
 //			$document->addScriptDeclaration( $langScript );
 			$platform->addInlineScript($langScript);
 

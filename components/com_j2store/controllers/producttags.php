@@ -8,6 +8,9 @@
 use Joomla\Registry\Format\Json;
 
 defined('_JEXEC') or die;
+
+use Joomla\CMS\Factory;
+
 require_once(JPATH_ADMINISTRATOR.'/components/com_j2store/controllers/productbase.php');
 class J2StoreControllerProducttags extends J2StoreControllerProductsBase
 {
@@ -21,14 +24,14 @@ class J2StoreControllerProducttags extends J2StoreControllerProductsBase
 		$utility->nocache();
 		$utility->clear_cache();
 
-		$app = JFactory::getApplication();
-		$session = JFactory::getSession();
-		$db = JFactory::getDbo();
+		$app = Factory::getApplication();
+		$session = $app->getSession();
+        $db = Factory::getContainer()->get('DatabaseDriver');
 		$active	= $app->getMenu()->getActive();
 		$menus		= $app->getMenu();
 		$pathway	= $app->getPathway();
-		$document = JFactory::getDocument();
-		$lang = JFactory::getLanguage();
+		$document = $app->getDocument();
+		$lang = $app->getLanguage();
 
 		$manufacturer_ids = $app->input->get('manufacturer_ids', array(), 'ARRAY');
 		$vendor_ids = $app->input->get('vendor_ids', array(), 'ARRAY');
@@ -281,7 +284,7 @@ class J2StoreControllerProducttags extends J2StoreControllerProductsBase
 
 		$view->assign('active_menu', $menu) ;
 		$content ='var j2store_product_base_link ="'. $menu->link.'&Itemid='.$menu->id .'";';
-		JFactory::getDocument()->addScriptDeclaration($content);
+        $document->addScriptDeclaration($content);
 
         $view_html = '';
         J2Store::plugin()->event('ViewProductListTagHtml', array(&$view_html, &$view, $model));
@@ -291,7 +294,7 @@ class J2StoreControllerProducttags extends J2StoreControllerProductsBase
 	}
 
 	public function getTagId($tag_alias){
-		$db = JFactory::getDbo ();
+        $db = Factory::getContainer()->get('DatabaseDriver');
 		$query = $db->getQuery (true);
 		$query->select ( 'id' )->from ( '#__tags' )->where ( 'alias ='.$db->q($tag_alias) );
 		$db->setQuery ( $query );
@@ -393,7 +396,7 @@ class J2StoreControllerProducttags extends J2StoreControllerProductsBase
 
 	public function view() {
 
-		$app = JFactory::getApplication();
+		$app = Factory::getApplication();
 		$product_id = $app->input->getInt('id');
 
 		if(!$product_id) {
@@ -423,7 +426,7 @@ class J2StoreControllerProducttags extends J2StoreControllerProductsBase
 
 		//get product
 		$product = $product_helper->setId($product_id)->getProduct();
-        $user = JFactory::getUser();
+        $user = $app->getIdentity();
         //access
         $access_groups = $user->getAuthorisedViewLevels();
         if(!isset($product->source->access) || empty($product->source->access) || !in_array($product->source->access,$access_groups) ){
@@ -494,7 +497,7 @@ class J2StoreControllerProducttags extends J2StoreControllerProductsBase
 		$active	= $app->getMenu()->getActive();
 		$menus		= $app->getMenu();
 		$pathway	= $app->getPathway();
-		$document = JFactory::getDocument();
+		$document   = $app->getDocument();
 		// Because the application sets a default page title,
 		// we need to get it from the menu item itself
 		$menu = $menus->getActive();
@@ -596,7 +599,7 @@ class J2StoreControllerProducttags extends J2StoreControllerProductsBase
         if(isset($product->main_tag) && !empty($product->main_tag)){
 
             $tag_menus =JMenu::getInstance('site');
-            $lang = JFactory::getLanguage();
+            $lang = $app->getLanguage();
 
 
             $tag_menu_id = '';
@@ -637,7 +640,7 @@ class J2StoreControllerProducttags extends J2StoreControllerProductsBase
                     }
                 }
                 // 3. set product canonical url
-                $doc = JFactory::getDocument();
+                $doc = $app->getDocument();
                 $canonical = trim(JUri::root(),'/').'/'.ltrim(J2Store::platform()->getProductUrl(array('task' => 'view','id' => $product->j2store_product_id,'Itemid' => $tag_menu_id),true),'/');
                 $doc->addHeadLink(htmlspecialchars($canonical), 'canonical');
             }

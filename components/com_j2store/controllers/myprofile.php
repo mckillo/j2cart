@@ -6,6 +6,9 @@
  */
 // No direct access to this file
 defined('_JEXEC') or die;
+
+use Joomla\CMS\Factory;
+
 class J2StoreControllerMyProfile extends F0FController
 {
 
@@ -20,7 +23,8 @@ class J2StoreControllerMyProfile extends F0FController
 
 	protected function onBeforeGenericTask($task)
 	{
-		$format = JFactory::getApplication()->input->getString('format', '');
+        $input = Factory::getApplication()->input;
+		$format = $input->getString('format', '');
 		$forbidden = array('json', 'csv', 'pdf');
 		if(in_array(strtolower($format), $forbidden)) {
 			return false;
@@ -31,7 +35,8 @@ class J2StoreControllerMyProfile extends F0FController
 
 	protected function onBeforeBrowse() {
 
-		$format = JFactory::getApplication()->input->getString('format', '');
+        $input = Factory::getApplication()->input;
+		$format = $input->getString('format', '');
 		$forbidden = array('json', 'csv', 'pdf');
 		if(in_array(strtolower($format), $forbidden)) {
 			return false;
@@ -42,9 +47,9 @@ class J2StoreControllerMyProfile extends F0FController
 
 	public function display($cachable = false, $url = false, $tpl = NULL) {
 
-		$app = JFactory::getApplication();
-		$session = JFactory::getSession();
-		$user = JFactory::getUser();
+		$app = Factory::getApplication();
+		$session = $app->getSession();
+        $user = $app->getIdentity();
 		$document = F0FPlatform::getInstance()->getDocument();
 		$params = J2Store::config();
 		if ($document instanceof JDocument)
@@ -147,10 +152,10 @@ class J2StoreControllerMyProfile extends F0FController
 		$address_id = $this->input->getInt('address_id');
 		$address = F0FTable::getAnInstance('Address' ,'J2StoreTable');
 		$address->load($address_id);
-		$user = JFactory::getUser ();
+        $app = Factory::getApplication();
+        $user = $app->getIdentity();
 
 		if(!empty( $address->user_id ) && $user->id != $address->user_id){
-			$app = JFactory::getApplication ();
 			$app->redirect ('index.php?option=com_j2store&view=myprofile',JText::_('J2STORE_MYPROFILE_ADDRESS_INVALID'),'error');
 		}
 		$address_type = $this->input->getString('address_type');
@@ -176,7 +181,7 @@ class J2StoreControllerMyProfile extends F0FController
 		$url = $platform->getMyprofileUrl();
         $json = array();
 		if($table->load($o_id)){
-			$user = JFactory::getUser ();
+            $user = $app->getIdentity();
 			if($user->id == $table->user_id && $table->user_id > 0){
 				if(!$table->delete($o_id)){
                     $json['success'] = false;
@@ -206,8 +211,8 @@ class J2StoreControllerMyProfile extends F0FController
 	 * @return result
 	 */
 	function saveAddress(){
-		$app = JFactory::getApplication();
-		$user = JFactory::getUser();
+		$app = Factory::getApplication();
+		$user = $app->getIdentity();
 		$values = $app->input->getArray($_POST);
 		$values['id'] = $values['address_id'];
 		unset( $values['j2store_address_id'] );
@@ -266,7 +271,7 @@ class J2StoreControllerMyProfile extends F0FController
 
 	public  function vieworder(){
 
-		$app = JFactory::getApplication();
+		$app = Factory::getApplication();
 		$order_id = $this->input->getString('order_id');
 		$view = $this->getThisView();
 
@@ -293,7 +298,7 @@ class J2StoreControllerMyProfile extends F0FController
 
 	public function printOrder(){
 
-		$app = JFactory::getApplication();
+		$app = Factory::getApplication();
 		$order_id = $this->input->getString('order_id');
 		$view = $this->getThisView();
 
@@ -320,17 +325,17 @@ class J2StoreControllerMyProfile extends F0FController
 
 	public function reOrder(){
 		//order
-		$app = JFactory::getApplication();
+		$app = Factory::getApplication();
 		$order_id = $app->input->get('order_id',0);
 		$url = 'index.php?option=com_j2store&view=myprofile';
 
-		if(!$order_id || JFactory::getUser ()->id < 1 || !JSession::checkToken('get') ){
+		if(!$order_id || $app->getIdentity()->id < 1 || !JSession::checkToken('get') ){
 			$app->redirect ( $url, JText::_('J2STORE_INVALID_ORDER_PROFILE') );
 		}
 
 		$order = F0FTable::getInstance('Order' ,'J2StoreTable')->getClone();
 		$order->load(array('order_id' => $order_id));
-		$user = JFactory::getUser ();
+		$user = $app->getIdentity();
 
 		if($order->load(array('order_id' => $order_id)) && $order->order_state_id == 5 ){
 			// variant check
@@ -340,7 +345,7 @@ class J2StoreControllerMyProfile extends F0FController
 			if(count ( $items ) > 0){
 				$cart_table = F0FTable::getAnInstance ( 'Cart', 'J2StoreTable' )->getClone ();
 				$cart_table->load(array('user_id'=>$user->id));
-				$db = JFactory::getDbo ();
+                $db = Factory::getContainer()->get('DatabaseDriver');
 				if(!empty($cart_table->j2store_cart_id)){
 					$db->getQuery(true);
 					$query = 'DELETE FROM #__j2store_cartitems where cart_id ='.$db->q($cart_table->j2store_cart_id);
@@ -357,7 +362,7 @@ class J2StoreControllerMyProfile extends F0FController
 				$cart = F0FTable::getAnInstance ( 'Cart', 'J2StoreTable' )->getClone ();
 				$cart->j2store_cart_id = 0;
 				$cart->user_id = $user->id;
-				$session = JFactory::getSession ();
+				$session = $app->getSession();
 				$cart->session_id = $session->getId();
 				$cart->cart_type = 'cart';
 				$cart->created_on = JFactory::getDate ()->toSql (true);
@@ -438,7 +443,7 @@ class J2StoreControllerMyProfile extends F0FController
 
 
 	public function getCountry(){
-		$app = JFactory::getApplication();
+		$app = Factory::getApplication();
 		$country_id = $app->input->getInt('country_id');
 		$country_info = F0FModel::getTmpInstance('Countries', 'J2StoreModel')->getItem($country_id);
 		$json = array();
@@ -475,9 +480,9 @@ class J2StoreControllerMyProfile extends F0FController
 
 	public function validate($order) {
 
-		$app = JFactory::getApplication();
-		$user = JFactory::getUser();
-		$session = JFactory::getSession();
+		$app = Factory::getApplication();
+		$user = $app->getIdentity();
+		$session = $app->getSession();
 		$guest_token = $session->get('guest_order_token', '', 'j2store');
 		$guest_order_email = $session->get('guest_order_email', '', 'j2store');
 
@@ -505,7 +510,7 @@ class J2StoreControllerMyProfile extends F0FController
 
 		//check token
         JSession::checkToken() or jexit('Invalid Token');
-		//$app = JFactory::getApplication();
+		$app = Factory::getApplication();
 		//$post = $app->input->getArray($_REQUEST);
         $platform= J2Store::platform();
 		$email = $this->input->getString('email', '');
@@ -518,7 +523,7 @@ class J2StoreControllerMyProfile extends F0FController
 
 		//checks
 		if(filter_var($email, FILTER_VALIDATE_EMAIL) !== false) {
-			$session = JFactory::getSession();
+			$session = $app->getSession();
 			$session->set('guest_order_email', $email, 'j2store');
 
 		} else {
@@ -545,7 +550,7 @@ class J2StoreControllerMyProfile extends F0FController
 		}
 	}
 	function updateHitCount(){
-		$app = JFactory::getApplication();
+		$app = Factory::getApplication();
 		$post = $app->input->getArray($_REQUEST);
 		$json = array();		
 		$order = F0FTable::getInstance('Order', 'J2StoreTable')->getClone();

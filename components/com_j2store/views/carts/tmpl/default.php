@@ -4,13 +4,16 @@
  * @copyright Copyright (c)2014-17 Ramesh Elamathi / J2Store.org
  * @license GNU GPL v3 or later
  */
+
+use Joomla\CMS\Factory;
+
 // No direct access to this file
 defined('_JEXEC') or die;
 $platform = J2Store::platform();
 // get j2Store Params to determine which bootstrap version we're using - Waseem Sadiq (waseem@bulletprooftemplates.com)
 $J2gridRow = ($this->params->get('bootstrap_version', 2) == 2) ? 'row-fluid' : 'row';
 $J2gridCol = ($this->params->get('bootstrap_version', 2) == 2) ? 'span' : 'col-md-';
-$app = JFactory::getApplication();
+$app = Factory::getApplication();
 $active_menu = $app->getMenu()->getActive();
 $page_heading = is_object($active_menu) ? $active_menu->getParams(): $platform->getRegistry('{}');
 $page_heading_enabled = $page_heading->get('show_page_heading',0);

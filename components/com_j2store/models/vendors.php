@@ -6,11 +6,14 @@
  */
 // No direct access to this file
 defined('_JEXEC') or die;
+
+use Joomla\CMS\Factory;
+
 class J2StoreModelVendors extends F0FModel {
 
 	public function &getItem($id = null)
 	{
-		$user = JFactory::getUser();
+        $user = Factory::getApplication()->getIdentity();
 		$this->record = F0FTable::getAnInstance('Vendoruser','J2StoreTable');
 		$this->record->load($user->id);
 
@@ -23,7 +26,7 @@ class J2StoreModelVendors extends F0FModel {
 	
 	public function buildQuery($overrideLimits = false)
 	{
-		$db = JFactory::getDbo();
+        $db = Factory::getContainer()->get('DatabaseDriver');
 		$query  = $db->getQuery(true);
 		$query->select('#__j2store_vendors.*')->from("#__j2store_vendors as #__j2store_vendors");
 		$query->select($db->qn('#__j2store_addresses').'.j2store_address_id')
@@ -54,13 +57,13 @@ class J2StoreModelVendors extends F0FModel {
 
 	public function buildOrderbyQuery(&$query){
 		$state = $this->getState();
-		$app = JFactory::getApplication();
+		$app = Factory::getApplication();
 		$filter_order_Dir = $app->input->getString('filter_order_Dir','asc');
 		$filter_order = $app->input->getString('filter_order','filter_name');
         if(!in_array(strtolower($filter_order_Dir),array('asc','desc'))){
             $filter_order_Dir = 'desc';
         }
-        $db = JFactory::getDbo();
+        $db = Factory::getContainer()->get('DatabaseDriver');
 		//check filter
 		if($filter_order =='j2store_vendor_id' || $filter_order =='enabled' ){
 			$query->order('#__j2store_vendors.'.$filter_order.' '.$filter_order_Dir);

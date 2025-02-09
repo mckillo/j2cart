@@ -6,6 +6,7 @@
  */
 // No direct access to this file
 use Joomla\Registry\Format\Json;
+use Joomla\CMS\Factory;
 
 defined('_JEXEC') or die;
 require_once(JPATH_ADMINISTRATOR.'/components/com_j2store/controllers/productbase.php');
@@ -23,13 +24,13 @@ class J2StoreControllerProducts extends J2StoreControllerProductsBase
 
         $platform = J2Store::platform();
 		$app = $platform->application();
-		$session = JFactory::getSession();
-		$db = JFactory::getDbo();
+		$session = $app->getSession();
+        $db = Factory::getContainer()->get('DatabaseDriver');
 		$active	= $app->getMenu()->getActive();
 		$menus		= $app->getMenu();
 		$pathway	= $app->getPathway();
-		$document = JFactory::getDocument();
-		$lang = JFactory::getLanguage();
+		$document = $app->getDocument();
+		$lang = $app->getLanguage();
 
 		$manufacturer_ids = $this->input->get('manufacturer_ids', array(), 'ARRAY');
 		$vendor_ids = $this->input->get('vendor_ids', array(), 'ARRAY');
@@ -306,7 +307,7 @@ class J2StoreControllerProducts extends J2StoreControllerProductsBase
             $content ='var j2store_product_base_link = "";';
         }
         $platform->addInlineScript($content);
-		//JFactory::getDocument()->addScriptDeclaration($content);
+		//Factory::getDocument()->addScriptDeclaration($content);
         $view_html = '';
         J2Store::plugin()->event('ViewProductListHtml', array(&$view_html, &$view, $model));
 		//$this->display(in_array('browse', $this->cacheableTasks));
@@ -471,7 +472,7 @@ class J2StoreControllerProducts extends J2StoreControllerProductsBase
 	}
 
     public function getProductOptionList($product_type){
-        $db = JFactory::getDbo();
+        $db = Factory::getContainer()->get('DatabaseDriver');
         $query = $db->getQuery(true);
         $query->select('j2store_option_id, option_unique_name, option_name');
         $query->from('#__j2store_options');
@@ -559,7 +560,7 @@ class J2StoreControllerProducts extends J2StoreControllerProductsBase
 
 	public function view() {
 
-		$app = JFactory::getApplication();
+		$app = Factory::getApplication();
 		$product_id = $app->input->getInt('id');
 
 		if(!$product_id) {
@@ -591,7 +592,7 @@ class J2StoreControllerProducts extends J2StoreControllerProductsBase
 
 		//get product
 		$product = $product_helper->setId($product_id)->getProduct();
-        $user = JFactory::getUser();
+        $user = $app->getIdentity();
         //access
         $access_groups = $user->getAuthorisedViewLevels();
 		if(!isset($product->source->access) || empty($product->source->access) || !in_array($product->source->access,$access_groups) ){
@@ -663,7 +664,7 @@ class J2StoreControllerProducts extends J2StoreControllerProductsBase
 		$active	= $app->getMenu()->getActive();
 		$menus		= $app->getMenu();
 		$pathway	= $app->getPathway();
-		$document = JFactory::getDocument();
+		$document   = $app->getDocument();
 		// Because the application sets a default page title,
 		// we need to get it from the menu item itself
 		$menu = $menus->getActive();

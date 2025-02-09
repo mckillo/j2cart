@@ -7,6 +7,9 @@
  */
 // No direct access to this file
 defined ( '_JEXEC' ) or die ();
+
+use Joomla\CMS\Factory;
+
 $order = $this->order;
 $platform = J2Store::platform();
 $items = $this->order->getItems();
@@ -14,10 +17,10 @@ $currency = J2Store::currency();
 $this->taxes = $order->getOrderTaxrates();
 $colspan = '2';
 if(empty($order->customer_language) || $order->customer_language == '*' || $order->customer_language == ''){
-    $language = JFactory::getLanguage();
+    $language = Factory::getApplication()->getLanguage();
 
 }else{
-    $conf = JFactory::getConfig();
+    $conf = Factory::getContainer()->get('config');
     $debug = $conf->get('debug_lang');
     $language = JLanguage::getInstance($order->customer_language, $debug);
     $language->load('com_j2store');

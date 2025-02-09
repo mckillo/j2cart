@@ -9,10 +9,12 @@
 # Technical Support:  Forum - http://j2store.org/forum/index.html
 -------------------------------------------------------------------------*/
 
-
 //no direct access
 defined('_JEXEC') or die('Restricted access');
-$task = JFactory::getApplication()->input->getString('task');
+
+use Joomla\CMS\Factory;
+
+$task = Factory::getApplication()->input->getString('task');
 ?>
 <?php if ($task == 'printOrder') : ?>
     <style type="text/css" media="print">

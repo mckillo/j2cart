@@ -11,6 +11,9 @@
 
 // no direct access
 defined( '_JEXEC' ) or die( 'Restricted access' );
+
+use Joomla\CMS\Factory;
+
 // get j2Store Params to determine which bootstrap version we're using - Waseem Sadiq (waseem@bulletprooftemplates.com)
 $J2gridRow = ($this->params->get('bootstrap_version', 2) == 2) ? 'row-fluid' : 'row';
 $J2gridCol = ($this->params->get('bootstrap_version', 2) == 2) ? 'span' : 'col-md-';
@@ -133,7 +136,7 @@ if (isset($this->addresses) && count($this->addresses) > 0) : ?>
 		<input type="button" value="<?php echo JText::_('J2STORE_CHECKOUT_CONTINUE'); ?>" id="button-billing-address" class="button btn btn-primary" />
 	</div>
 </div>
-<input type="hidden" name="email" value="<?php echo JFactory::getUser()->email; ?>" />
+<input type="hidden" name="email" value="<?php echo Factory::getApplication()->getIdentity()->email; ?>" />
 <input type="hidden" name="task" value="billing_address_validate" />
 <input type="hidden" name="option" value="com_j2store" />
 <input type="hidden" name="view" value="checkout" />

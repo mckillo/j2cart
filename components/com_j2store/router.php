@@ -7,6 +7,8 @@
 // No direct access to this file
 defined ( '_JEXEC' ) or die ();
 
+use Joomla\CMS\Factory;
+
 // Load FOF
 // Include F0F
 if(!defined('F0F_INCLUDED')) {
@@ -47,7 +49,7 @@ class J2StoreRouter extends JComponentRouterBase {
 		$j2storesource = J2StoreRouterHelper::getAndPop ( $query, 'j2storesource' );
         $lang = J2StoreRouterHelper::getAndPop ( $query, 'lang' );
         if(empty($lang)){
-            $langu = JFactory::getLanguage();
+            $langu = Factory::getApplication()->getLanguage();
             $lang = $langu->getTag();
         }
 		// $orderpayment_type = J2StoreRouterHelper::getAndPop($query, 'orderpayment_type');

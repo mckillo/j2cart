@@ -11,13 +11,16 @@
 
 // no direct access
 defined('_JEXEC') or die('Restricted access');
+
+use Joomla\CMS\Factory;
+
 // get j2Store Params to determine which bootstrap version we're using - Waseem Sadiq (waseem@bulletprooftemplates.com)
 $J2gridRow = ($this->params->get('bootstrap_version', 2) == 2) ? 'row-fluid' : 'row';
 $J2gridCol = ($this->params->get('bootstrap_version', 2) == 2) ? 'span' : 'col-md-';
 
 $order_link = @$this->order_link;
 $plugin_html = @$this->plugin_html;
-$app = JFactory::getApplication();
+$app = Factory::getApplication();
 $paction = $app->input->getString('paction');
 $after_post_html = J2Store::plugin ()->eventWithHtml ( 'AfterPostPayment', array($this) );
 ?>

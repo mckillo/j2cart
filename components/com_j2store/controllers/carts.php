@@ -7,6 +7,8 @@
 // No direct access to this file
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Factory;
+
 class J2StoreControllerCarts extends F0FController
 {
 
@@ -21,7 +23,7 @@ class J2StoreControllerCarts extends F0FController
 
 	protected function onBeforeGenericTask($task)
 	{
-		$format = JFactory::getApplication()->input->getString('format', '');
+		$format = Factory::getApplication()->input->getString('format', '');
 		$forbidden = array('json', 'csv', 'pdf');
 		if(in_array(strtolower($format), $forbidden)) {
 			return false;
@@ -32,7 +34,7 @@ class J2StoreControllerCarts extends F0FController
 
 	protected function onBeforeBrowse() {
 
-		$format = JFactory::getApplication()->input->getString('format', '');
+		$format = Factory::getApplication()->input->getString('format', '');
 		$forbidden = array('json', 'csv', 'pdf');
 		if(in_array(strtolower($format), $forbidden)) {
 			return false;
@@ -95,7 +97,7 @@ class J2StoreControllerCarts extends F0FController
 	 *   */
 	function forceshipping(){
 		$json = array();
-		$app = JFactory::getApplication();
+		$app = Factory::getApplication();
 		$json = J2Store::plugin()->eventWithArray('ValidateShipping');
 		echo json_encode($json);
 		$app->close();
@@ -151,11 +153,11 @@ class J2StoreControllerCarts extends F0FController
 	function ajaxmini() {
 		J2Store::utilities()->nocache();
 		//initialise system objects
-		$app = JFactory::getApplication();
-		$document	= JFactory::getDocument();
+		$app = Factory::getApplication();
+		$document = $app->getDocument();
 
-		$db = JFactory::getDbo();
-		$language = JFactory::getLanguage()->getTag();
+        $db = Factory::getContainer()->get('DatabaseDriver');
+        $language = $app->getLanguage()->getTag();
 		$query = $db->getQuery(true);
 		$query->select('*')->from('#__modules')->where('module='.$db->q('mod_j2store_cart'))->where('published=1')
             ->where('(language="*" OR language='.$db->q($language).')');
@@ -192,7 +194,7 @@ class J2StoreControllerCarts extends F0FController
 		J2Store::utilities()->clear_cache();
 		J2Store::utilities()->nocache();
 		
-		$app = JFactory::getApplication();
+		$app = Factory::getApplication();
 		$currency = J2Store::currency();
 		$post = $app->input->getArray($_POST);
 		if(isset($post['currency_code'])) {
@@ -224,7 +226,7 @@ class J2StoreControllerCarts extends F0FController
 		}
 
 		//check if we have a redirect
-		$redirect = JFactory::getApplication()->input->getBase64('redirect', '');
+		$redirect = Factory::getApplication()->input->getBase64('redirect', '');
 		if(!empty($redirect)) {
 			$url = JRoute::_(base64_decode($redirect));
 		}else {
@@ -271,7 +273,7 @@ class J2StoreControllerCarts extends F0FController
 		}
 
         //check if we have a redirect
-        $redirect = JFactory::getApplication()->input->getBase64('redirect', '');
+        $redirect = Factory::getApplication()->input->getBase64('redirect', '');
         if(!empty($redirect)) {
             $url = JRoute::_(base64_decode($redirect));
         }else {
@@ -281,6 +283,8 @@ class J2StoreControllerCarts extends F0FController
 	}
 
 	function removeVoucher() {
+	
+		$app = Factory::getApplication();
 		
 		//first clear cache
 		J2Store::utilities()->nocache();
@@ -288,7 +292,7 @@ class J2StoreControllerCarts extends F0FController
 		J2Store::plugin()->event('BeforeRemoveVoucher');
 		$model = $this->getModel('Carts' ,'J2StoreModel');
 		//coupon
-		$session = JFactory::getSession();
+		$session = $app::getSession();
 		$voucher_model = F0FModel::getTmpInstance ( 'Vouchers', 'J2StoreModel' );
 		if($voucher_model->has_voucher()) {
 			$voucher_model->remove_voucher();
@@ -309,8 +313,8 @@ class J2StoreControllerCarts extends F0FController
 		J2Store::utilities()->clear_cache();
 		
 		$model = $this->getModel('Carts' ,'J2StoreModel');
-		$app = JFactory::getApplication();
-		$session = JFactory::getSession();
+		$app = Factory::getApplication();
+		$session = $app->getSession();
 		$country_id = $this->input->getInt('country_id', 0);
 		$zone_id = $this->input->getInt('zone_id', 0);
 		$postcode  = $this->input->getString('postcode', 0);
@@ -372,8 +376,8 @@ class J2StoreControllerCarts extends F0FController
 		$json = array();
 		
 		$model = $this->getModel('Carts' ,'J2StoreModel');
-		$app = JFactory::getApplication();
-		$session = JFactory::getSession();
+		$app = Factory::getApplication();
+		$session = $app->getSession();
 		$values = $this->input->getArray($_REQUEST);
 		$shipping_values = array();
 		$shipping_values['shipping_price']    = isset($values['shipping_price']) ? $values['shipping_price'] : 0;
@@ -396,9 +400,9 @@ class J2StoreControllerCarts extends F0FController
 
 	public function getCountry()
     {
-        $session = JFactory::getSession();
+        $app = Factory::getApplication();
+        $session = $app->getSession();
         $set = $session->get('j2store_country_zone',array(),'j2store');
-        $app = JFactory::getApplication();
         $country_id = $app->input->getInt('country_id');
         if (!isset($set[$country_id])) {
 
@@ -406,7 +410,7 @@ class J2StoreControllerCarts extends F0FController
             $json = array();
             if ($country_info) {
 
-                $db = JFactory::getDbo();
+                $db = Factory::getContainer()->get('DatabaseDriver');
                 $query = $db->getQuery(true);
                 $query->select('a.*')->from('#__j2store_zones AS a');
                 $query->where('a.enabled=1')
@@ -454,12 +458,12 @@ class J2StoreControllerCarts extends F0FController
 			$json = $model->validate_files($files);
 		}
 		echo json_encode($json);
-		JFactory::getApplication()->close();
+		Factory::getApplication()->close();
 	}
 	
 	public function addtowishlist() {
 		
-		$app = JFactory::getApplication();
+		$app = Factory::getApplication();
 		$model = $this->getModel('Carts', 'J2StoreModel');
 		$model->setCartType('wishlist');
 		$result = $model->addCartItem();

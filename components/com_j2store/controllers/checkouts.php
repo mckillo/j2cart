@@ -6,6 +6,9 @@
  */
 // No direct access to this file
 defined('_JEXEC') or die;
+
+use Joomla\CMS\Factory;
+
 class J2StoreControllerCheckouts extends F0FController
 {
 
@@ -20,7 +23,7 @@ class J2StoreControllerCheckouts extends F0FController
 
 	protected function onBeforeGenericTask($task)
 	{
-		$format = JFactory::getApplication()->input->getString('format', '');
+		$format = Factory::getApplication()->input->getString('format', '');
 		$forbidden = array('json', 'csv', 'pdf');
 		if(in_array(strtolower($format), $forbidden)) {
 			return false;
@@ -31,7 +34,7 @@ class J2StoreControllerCheckouts extends F0FController
 
 	protected function onBeforeBrowse() {
 
-		$format = JFactory::getApplication()->input->getString('format', '');
+		$format = Factory::getApplication()->input->getString('format', '');
 		$forbidden = array('json', 'csv', 'pdf');
 		if(in_array(strtolower($format), $forbidden)) {
 			return false;
@@ -43,8 +46,8 @@ class J2StoreControllerCheckouts extends F0FController
 	public function display($cachable = false, $urlparams = array(), $tpl=null) {
 
 		$document = F0FPlatform::getInstance()->getDocument();
-		$app = JFactory::getApplication();
-		$user = JFactory::getUser();
+		$app = Factory::getApplication();
+        $user = $app->getIdentity();
 
 		if ($document instanceof JDocument)
 		{
@@ -76,7 +79,7 @@ class J2StoreControllerCheckouts extends F0FController
 
 		$order = F0FModel::getTmpInstance('Orders', 'J2StoreModel')->initOrder()->getOrder();
 		$items = $order->getItems();
-		$session = JFactory::getSession ();
+		$session = $app->getSession ();
 		$is_mobile = $session->get('is_mobile','','j2store');
         $cart_params = array();
         if ($is_mobile){
@@ -119,8 +122,8 @@ class J2StoreControllerCheckouts extends F0FController
 
 
 	function login() {
-		$app = JFactory::getApplication();
-		$session = JFactory::getSession();
+		$app = Factory::getApplication();
+		$session = $app->getSession();
 		$view = $this->getThisView();
 
 		if ($model = $this->getThisModel())
@@ -152,9 +155,9 @@ class J2StoreControllerCheckouts extends F0FController
 
 	function login_validate() {
 
-		$app = JFactory::getApplication();
-		$user = JFactory::getUser();
-		$session = JFactory::getSession();
+		$app = Factory::getApplication();
+        $user = $app->getIdentity();
+		$session = $app->getSession();
 		$params = J2Store::config();
 		$session->set('uaccount', 'login', 'j2store');
 
@@ -190,7 +193,7 @@ class J2StoreControllerCheckouts extends F0FController
 
 		if (!$json) {
 			$session->clear('guest', 'j2store');
-            $user = JFactory::getUser();
+            $user = $app->getIdentity();
 			// Default Addresses
 			$address_info = F0FModel::getTmpInstance('Addresses', 'J2StoreModel')->user_id($user->id)->getFirstItem();
 
@@ -225,8 +228,8 @@ class J2StoreControllerCheckouts extends F0FController
 	}
 
 	function register() {
-		$app = JFactory::getApplication();
-		$session = JFactory::getSession();
+		$app = Factory::getApplication();
+		$session = $app->getSession();
 		$params = J2Store::config();
 
 		$view = $this->getThisView();
@@ -281,7 +284,7 @@ class J2StoreControllerCheckouts extends F0FController
 	function register_validate() {
         $platform = J2Store::platform();
 		$app = $platform->application();
-		$user = JFactory::getUser();
+        $user = $app->getIdentity();
 		$session = $app->getSession();
 		$view = $this->getThisView();
 		if ($model = $this->getThisModel())
@@ -409,8 +412,8 @@ class J2StoreControllerCheckouts extends F0FController
 	}
 
 	function guest() {
-		$app = JFactory::getApplication();
-		$session = JFactory::getSession();
+		$app = Factory::getApplication();
+		$session = $app->getSession();
 		$cart_model = F0FModel::getTmpInstance('Carts', 'J2StoreModel');
 		$view = $this->getThisView();
 		if ($model = $this->getThisModel())
@@ -515,8 +518,8 @@ class J2StoreControllerCheckouts extends F0FController
 
 	function guest_validate() {
 
-		$app = JFactory::getApplication();
-		$session = JFactory::getSession();
+		$app = Factory::getApplication();
+		$session = $app->getSession();
 		$address_model = F0FModel::getTmpInstance('Addresses', 'J2StoreModel');
 		$view = $this->getThisView();
 		if ($model = $this->getThisModel())
@@ -535,7 +538,7 @@ class J2StoreControllerCheckouts extends F0FController
 		$json = array();
 
 		// Validate if customer is logged in.
-		if (JFactory::getUser()->id) {
+		if ($app->getIdentity()->id) {
 			$json['redirect'] = $redirect_url;
 		}
 
@@ -670,8 +673,8 @@ class J2StoreControllerCheckouts extends F0FController
 
 	function guest_shipping() {
 
-		$app = JFactory::getApplication();
-		$session = JFactory::getSession();
+		$app = Factory::getApplication();
+		$session = $app->getSession();
 		$view = $this->getThisView();
 		if ($model = $this->getThisModel())
 		{
@@ -729,8 +732,8 @@ class J2StoreControllerCheckouts extends F0FController
 	}
 
 	function guest_shipping_validate() {
-		$app = JFactory::getApplication();
-		$session = JFactory::getSession();
+		$app = Factory::getApplication();
+		$session = $app->getSession();
 		$address_model = F0FModel::getTmpInstance('Addresses', 'J2StoreModel');
 		$params = J2Store::config();
 		$view = $this->getThisView();
@@ -748,7 +751,7 @@ class J2StoreControllerCheckouts extends F0FController
 		$json = array();
 
 		// Validate if customer is logged in.
-		if (JFactory::getUser()->id) {
+		if ($app->getIdentity()->id) {
 			$json['redirect'] = $redirect_url;
 		}
 
@@ -834,8 +837,8 @@ class J2StoreControllerCheckouts extends F0FController
 
 	function billing_address() {
 
-		$app = JFactory::getApplication();
-		$session = JFactory::getSession();
+		$app = Factory::getApplication();
+		$session = $app->getSession();
 		$address_model = F0FModel::getTmpInstance('Addresses', 'J2StoreModel');
 		$view = $this->getThisView();
 		if ($model = $this->getThisModel())
@@ -843,7 +846,7 @@ class J2StoreControllerCheckouts extends F0FController
 			// Push the model into the view (as default)
 			$view->setModel($model, true);
 		}
-		$user = JFactory::getUser();
+		$user = $app->getIdentity();
 		$address = F0FTable::getAnInstance('Address', 'J2StoreTable');
 		if($user->id) {
 			//$address = $address_model->user_id($user->id)->getFirstItem();
@@ -939,9 +942,9 @@ class J2StoreControllerCheckouts extends F0FController
 
 	function billing_address_validate() {
 
-		$app = JFactory::getApplication();
-		$session = JFactory::getSession();
-		$user = JFactory::getUser();
+		$app = Factory::getApplication();
+		$session = $app->getSession();
+		$user = $app->getIdentity();
 		$address_model = F0FModel::getTmpInstance('Addresses', 'J2StoreModel');
 
 		$view = $this->getThisView();
@@ -1048,9 +1051,9 @@ class J2StoreControllerCheckouts extends F0FController
 
 	function shipping_address() {
 
-		$app = JFactory::getApplication();
-		$user = JFactory::getUser();
-		$session = JFactory::getSession();
+		$app = Factory::getApplication();
+		$user = $app->getIdentity();
+		$session = $app->getSession();
 		$address_model = F0FModel::getTmpInstance('Addresses', 'J2StoreModel');
 
 		$view = $this->getThisView();
@@ -1145,9 +1148,9 @@ class J2StoreControllerCheckouts extends F0FController
 
 	function shipping_address_validate() {
 
-		$app = JFactory::getApplication();
-		$user = JFactory::getUser();
-		$session = JFactory::getSession();
+		$app = Factory::getApplication();
+		$user = $app->getIdentity();
+		$session = $app->getSession();
 		$address_model = F0FModel::getTmpInstance('Addresses', 'J2StoreModel');
 		$params = J2Store::config();
 		$view = $this->getThisView();
@@ -1275,9 +1278,9 @@ class J2StoreControllerCheckouts extends F0FController
 	//shipping and payment method
 
 	function shipping_payment_method() {
-		$app = JFactory::getApplication();
-		$session = JFactory::getSession();
-		$user = JFactory::getUser();
+		$app = Factory::getApplication();
+		$session = $app->getSession();
+		$user = $app->getIdentity();
 		$params = J2Store::config();
 		$address_model = F0FModel::getTmpInstance('Addresses', 'J2StoreModel');
 
@@ -1395,9 +1398,9 @@ class J2StoreControllerCheckouts extends F0FController
 
 	function shipping_payment_method_validate() {
 
-		$app = JFactory::getApplication();
-		$session = JFactory::getSession();
-		$user = JFactory::getUser();
+		$app = Factory::getApplication();
+		$session = $app->getSession();
+		$user = $app->getIdentity();
 		$params = J2Store::config();
 		$address_model = F0FModel::getTmpInstance('Addresses', 'J2StoreModel');
 
@@ -1555,9 +1558,9 @@ class J2StoreControllerCheckouts extends F0FController
 	 * display expressconfirm layout
 	 *   */
 	function expressconfirm(){
-		$app = JFactory::getApplication();
+		$app = Factory::getApplication();
 		$data = $app->input->getArray($_REQUEST);
-		$session = JFactory::getSession();
+		$session = $app->getSession();
 		$view = $this->getThisView();
 		$order = '';
 		if ($model = $this->getThisModel())
@@ -1591,9 +1594,9 @@ class J2StoreControllerCheckouts extends F0FController
 		//no cache
 		J2Store::utilities()->nocache();
 
-		$app = JFactory::getApplication();
-		$session = JFactory::getSession();
-		$user = JFactory::getUser();
+		$app = Factory::getApplication();
+		$session = $app->getSession();
+		$user = $app->getIdentity();
 		$params = J2Store::config();
 		$address_model = F0FModel::getTmpInstance('Addresses', 'J2StoreModel');
 		JPluginHelper::importPlugin ('j2store');
@@ -1757,7 +1760,7 @@ class J2StoreControllerCheckouts extends F0FController
 			default :
 				$rates = F0FModel::getTmpInstance ( 'Shippings', 'J2StoreModel' )->getShippingRates ( $order );
 				$default_rate = array ();
-				$session = JFactory::getSession ();
+                $session = Factory::getApplication()->getSession();
 				$shipping_values = $session->get ( 'shipping_values', array (), 'j2store' );
 				if(count($rates)){
 					$order->show_payment_method = 1;
@@ -1791,11 +1794,11 @@ class J2StoreControllerCheckouts extends F0FController
 	}
 
 	function getPaymentForm($element = '', $plain_format = false) {
-		$app = JFactory::getApplication ();
+		$app = Factory::getApplication();
 		$values = $app->input->getArray ( $_REQUEST );
 		$html = '';
 		$text = "";
-		$user = JFactory::getUser ();
+		$user = $app->getIdentity();
 		if (empty ( $element )) {
 			$element = $app->input->getString ( 'payment_element' );
 		}
@@ -1833,7 +1836,7 @@ class J2StoreControllerCheckouts extends F0FController
 		$response ['msg'] = '';
 		$response ['error'] = '';
 
-		$app = JFactory::getApplication ();
+		$app = Factory::getApplication();
 		JPluginHelper::importPlugin ( 'j2store' );
 
 		// verify the form data
@@ -1905,9 +1908,9 @@ class J2StoreControllerCheckouts extends F0FController
 
 		J2Store::utilities()->nocache();
 
-		$app = JFactory::getApplication ();
-		$user = JFactory::getUser();
-		$session = JFactory::getSession();
+		$app = Factory::getApplication();
+		$user = $app->getIdentity();
+		$session = $app->getSession();
 		$params = J2Store::config();
 		$order_model = F0FModel::getTmpInstance('Orders', 'J2StoreModel');
 		$orderpayment_type = $app->input->getString ( 'orderpayment_type' );

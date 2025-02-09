@@ -6,6 +6,9 @@
  */
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
+
+use Joomla\CMS\Factory;
+
 class J2StoreViewProducts extends F0FViewHtml
 {
 	/**
@@ -24,7 +27,7 @@ class J2StoreViewProducts extends F0FViewHtml
 	 */
 
 	protected function onDisplay($tpl= null) {
-		JFactory::getLanguage ()->load ('com_j2store', JPATH_ADMINISTRATOR);
+        Factory::getApplication()->getLanguage()->load ('com_j2store', JPATH_ADMINISTRATOR);
 		$view = $this->input->getCmd('view', 'cpanel');
 		
 		if (in_array($view, array('cpanel', 'cpanels')))
@@ -46,7 +49,7 @@ class J2StoreViewProducts extends F0FViewHtml
 		// Pass page params on frontend only
 		if (F0FPlatform::getInstance()->isFrontend())
 		{
-		//	$params = JFactory::getApplication()->getParams();
+		//	$params = Factory::getApplication()->getParams();
 		//	$this->params = $params;
 		}
 		
