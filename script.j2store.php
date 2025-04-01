@@ -13,7 +13,8 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Installer\Installer;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Log\Log;
-// use Joomla\Database\DatabaseDriver; // not in Joomla 3
+use Joomla\Database\DatabaseInterface;
+use Joomla\Database\ParameterType;
 
 defined('_JEXEC') or die;
 
@@ -67,8 +68,9 @@ class Com_J2storeInstallerScript extends F0FUtilsInstallscript
    *
    * @var string
    */
-  protected $componentTitle = 'J2Store Joomla Shopping cart';
+  protected $componentTitle = 'J2Commerce Joomla Shopping Cart';
 
+  protected $minimumPHPVersion = '7.4.0';
   protected $minimumJoomlaVersion = '4.0.0';
   protected $maximumJoomlaVersion = '5.99.99';
 
@@ -101,16 +103,15 @@ class Com_J2storeInstallerScript extends F0FUtilsInstallscript
    *
    * @var   array
    */
-  protected $installation_queue = array(        // modules => { (folder) => { (module) => { (position), (published) } }* }*
+  protected $installation_queue = array(
     'modules' => array(
       'admin' => array(
-        'j2store_chart' => array('j2store-module-position-3', 1),
+        'mod_j2commerce_chart' => array('', 0), // we just want to install the module
         'j2store_stats_mini' => array('j2store-module-position-1', 1),
         'j2store_orders' => array('j2store-module-position-4', 1),
         'j2store_stats' => array('j2store-module-position-5', 1),
-        'j2store_menu' => array('menu', 1)
+        'j2store_menu' => array('status', 1)
       ),
-
       'site' => array(
         'mod_j2store_currency' => array('left', 0),
         'mod_j2store_cart' => array('left', 0),
@@ -143,12 +144,169 @@ class Com_J2storeInstallerScript extends F0FUtilsInstallscript
         'app_currencyupdater' => 1,
         'app_flexivariable' => 1,
         'app_schemaproducts' => 1,
-        'app_bootstrap3' => 0,
-        'app_bootstrap4' => 0,
         'app_bootstrap5' => 1
       )
     )
   );
+
+    function _deleteFolder($folderPath) {
+        if (!is_dir($folderPath)) {
+            return false;
+        }
+
+        $files = array_diff(scandir($folderPath), ['.', '..']);
+        foreach ($files as $file) {
+            $filePath = $folderPath . DIRECTORY_SEPARATOR . $file;
+            is_dir($filePath) ? $this->_deleteFolder($filePath) : unlink($filePath);
+        }
+        return rmdir($folderPath);
+    }
+
+  public function postflight($type, $parent)
+  {
+      parent::postflight($type, $parent);
+
+      // TODO remove once we are done moving files from j2store to com_j2commerce
+      $source = JPATH_SITE . '/media/j2store/j2commerce';
+      $destination = JPATH_SITE . '/media/com_j2commerce';
+
+      $move_files = true;
+      if (is_dir($destination)) {
+          // make sure we remove the old folder to make sure we add all new files
+          if (!$this->_deleteFolder($destination)) {
+              $move_files = false;
+              Factory::getApplication()->enqueueMessage('Could not delete J2Commerce media folder');
+          }
+      }
+
+      if ($move_files) {
+          if (!rename($source, $destination)) {
+              Factory::getApplication()->enqueueMessage('Could not move J2Commerce media files');
+          }
+      }
+
+      $dashboard_positions = [];
+
+      $dashboard_positions[] = 'j2store-module-position-1';
+      $dashboard_positions[] = 'j2store-module-position-2';
+      $dashboard_positions[] = 'j2store-module-position-3';
+      $dashboard_positions[] = 'j2store-module-position-4';
+      $dashboard_positions[] = 'j2store-module-position-5';
+
+      if ($type === 'update') {
+          // Remove the old chart module
+          if ($this->isModuleInAnyPositions('mod_j2store_chart', $dashboard_positions)) {
+              $this->removeModuleFromAnyPositions('mod_j2store_chart', $dashboard_positions);
+          }
+      }
+
+      // New charts
+      if (!$this->isModuleInAnyPositions('mod_j2commerce_chart', $dashboard_positions)) {
+          $this->addModuleToPosition('mod_j2commerce_chart', 'j2store-module-position-3', ['chart_type' => ['daily', 'monthly', 'yearly']]);
+      }
+  }
+
+    /**
+     * Add modules to the dashboard.
+     *
+     * @param   string  $position   The name of the position to add the module to
+     * @param   string  $module     The name of the admin module
+     * @param   array   $params     The list of parameters to set to the module
+     *
+     * @return  void
+     *
+     * @throws  Exception
+     */
+    private function addModuleToPosition(string $module_name, string $position, array $module_params = [])
+    {
+        $model  = Factory::getApplication()->bootComponent('com_modules')->getMVCFactory()->createModel('Module', 'Administrator', ['ignore_request' => true]);
+        $module = [
+            'id'         => 0,
+            'asset_id'   => 0,
+            'language'   => '*',
+            'note'       => '',
+            'published'  => 1,
+            'assignment' => 0,
+            'client_id'  => 1,
+            'showtitle'  => 0,
+            'content'    => '',
+            'module'     => $module_name,
+            'position'   => $position,
+        ];
+
+        $module['title']  = Text::_(strtoupper($module_name));
+        $module['access'] = (int) Factory::getApplication()->get('access', 1);
+        $module['params'] = array_merge([
+            'menutype' => '*',
+            'style'    => 'System-none',
+        ], $module_params);
+
+        if (!$model->save($module)) {
+            Factory::getApplication()->enqueueMessage(Text::sprintf('JLIB_INSTALLER_ERROR_COMP_INSTALL_FAILED_TO_CREATE_DASHBOARD', $model->getError()));
+        }
+    }
+
+    /**
+     * Does at least one instance of a given module exist in the dashboard
+     *
+     * @param   string  $position   The position to check. If no position is mentionned, all positions are checked
+     * @param   string  $module     The module to check
+     *
+     * @return  bool
+     */
+    private function isModuleInAnyPositions(string $module, array $positions = []): bool
+    {
+        if (empty($positions)) {
+            return 0;
+        }
+
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
+        $query = $db->getQuery(true)
+            ->select('COUNT(*)')
+            ->from($db->quoteName('#__modules'))
+            ->where([
+                $db->quoteName('module') . ' = :module',
+                $db->quoteName('client_id') . ' = ' . $db->quote(1),
+                $db->quoteName('published') . ' = ' . $db->quote(1)
+            ])
+            ->whereIn($db->quoteName('position'), $positions, ParameterType::STRING)
+            ->bind(':module', $module, ParameterType::STRING);
+
+        $modules = $db->setQuery($query)->loadResult() ?: 0;
+
+        return $modules > 0;
+    }
+
+    /**
+     * Remove a module from the dashboard
+     *
+     * @param   string  $module_name   The name of the module to remove
+     *
+     * @return  void
+     */
+    private function removeModuleFromAnyPositions(string $module_name, array $positions = [])
+    {
+        if (empty($positions)) {
+            return;
+        }
+
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
+        $query = $db->getQuery(true)
+            ->delete($db->quoteName('#__modules'))
+            ->where([
+                $db->quoteName('module') . ' = :module',
+                $db->quoteName('client_id') . ' = ' . $db->quote(1),
+                $db->quoteName('published') . ' = ' . $db->quote(1)
+            ])
+            ->whereIn($db->quoteName('position'), $positions, ParameterType::STRING)
+            ->bind(':module', $module_name, ParameterType::STRING);
+
+        try {
+            $db->setQuery($query)->execute();
+        } catch (\Exception $e) {
+            Factory::getApplication()->enqueueMessage('Could not uninstall ' . $module_name);
+        }
+    }
 
   public function preflight($type, $parent)
   {
@@ -211,11 +369,6 @@ class Com_J2storeInstallerScript extends F0FUtilsInstallscript
         $manifest = json_decode($result);
         $version = $manifest->version;
         if (!empty($version)) {
-          // abort if the current J2Store release is older
-          /*if( version_compare( $version, '3.9.99', 'lt' ) ) {
-              $parent->getParent()->abort('You cannot install J2Store Version 4 over the old versions directly. A migration tool should be used first to migrate your previous store data.');
-              return false;
-          }*/
           if (version_compare($version, '3.9.99', 'lt')) {
             if (!ComponentHelper::isEnabled('com_j2migrationchecker')) {
               $parent->getParent()->abort('The J2Store v4 Migration component com_j2migrationchecker was not found. Please install it before updating to J2Store 4.');
@@ -310,9 +463,6 @@ class Com_J2storeInstallerScript extends F0FUtilsInstallscript
         }
       }
 
-      if (version_compare(JVERSION, '3.99.99', 'ge') && isset($this->installation_queue) && isset($this->installation_queue['modules']['admin']['j2store_menu'])) {
-        $this->installation_queue['modules']['admin']['j2store_menu'] = array('status', 1);
-      }
       //----end of file removal//
       //all set. Lets rock..
 

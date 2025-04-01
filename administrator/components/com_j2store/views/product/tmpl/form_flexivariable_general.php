@@ -1,16 +1,18 @@
 <?php
 /**
- * @package J2Store
- * @copyright Copyright (c)2014-17 Ramesh Elamathi / J2Store.org
- * @copyright Copyright (c) 2024 J2Commerce . All rights reserved.
- * @license GNU GPL v3 or later
+ * @package     Joomla.Component
+ * @subpackage  J2Store
+ *
+ * @copyright Copyright (C) 2014-24 Ramesh Elamathi / J2Store.org
+ * @copyright Copyright (C) 2025 J2Commerce, LLC. All rights reserved.
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GNU/GPLv3 or later
+ * @website https://www.j2commerce.com
  */
-// No direct access to this file
-defined('_JEXEC') or die('Restricted access');
+
+defined('_JEXEC') or die;
+
 use Joomla\CMS\Language\Text;
-
 ?>
-
 <div class="j2store-product-general">
     <fieldset class="options-form">
         <legend><?php echo Text::_('J2STORE_PRODUCT_TAB_GENERAL');?></legend>

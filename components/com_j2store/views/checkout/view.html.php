@@ -7,15 +7,18 @@
 
 // No direct access
 defined('_JEXEC') or die;
+
+use Joomla\CMS\Factory;
+
 class J2StoreViewCheckout extends F0FViewHtml
 {
 
 	protected function onDisplay($tpl = null)
 	{
 	
-		$app = JFactory::getApplication();
-		$session = JFactory::getSession();
-		$user = JFactory::getUser();
+		$app = Factory::getApplication();
+		$session = $app->getSession();
+		$user = $app->getIdentity();
 		$view = $this->input->getCmd('view', 'checkout');
 		
 		$this->params = J2Store::config();

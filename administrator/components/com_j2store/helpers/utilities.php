@@ -1,25 +1,31 @@
 <?php
 /**
- * @package J2Store
- * @copyright Copyright (c)2014-17 Ramesh Elamathi / J2Store.org
- * @license GNU GPL v3 or later
+ * @package     Joomla.Component
+ * @subpackage  J2Store
+ *
+ * @copyright Copyright (C) 2014-24 Ramesh Elamathi / J2Store.org
+ * @copyright Copyright (C) 2025 J2Commerce, LLC. All rights reserved.
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GNU/GPLv3 or later
+ * @website https://www.j2commerce.com
  */
-// No direct access to this file
+
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Cache\CacheControllerFactoryInterface;
 use Joomla\CMS\Factory;
+use Joomla\CMS\Filter\OutputFilter;
 
 /**
  * J2Store helper.
  */
-
-class J2Utilities {
-
+class J2Utilities
+{
 	public static $instance = null;
 	protected $state;
 	private $_is_cleaned = false;
 
-	public function __construct($properties=null) {
+	public function __construct($properties=null)
+    {
 
 	}
 
@@ -33,11 +39,13 @@ class J2Utilities {
 		return self::$instance;
 	}
 
-	public function clear_cache() {
+	public function clear_cache()
+    {
 		try{
 			//clean it just once.
 			if(!$this->_is_cleaned) {
-				$cache = JFactory::getCache();
+				//$cache = Factory::getCache();
+				$cache = Factory::getContainer()->get(CacheControllerFactoryInterface::class)->createCacheController();
 				$cache->clean('com_j2store');
 				$cache->clean('com_content');
 				$this->_is_cleaned = true;
@@ -47,7 +55,8 @@ class J2Utilities {
 		}
 	}
 
-	public function nocache() {
+	public function nocache()
+    {
 			if(headers_sent()) return false;
 			header('Cache-Control: no-store, no-cache, must-revalidate');
 			header('Cache-Control: post-check=0, pre-check=0', false);
@@ -56,7 +65,8 @@ class J2Utilities {
 			return true;
 	}
 
-	public function isJson($string) {
+	public function isJson($string)
+    {
 		json_decode($string);
 		if(function_exists('json_last_error')) {
 			return (json_last_error() == JSON_ERROR_NONE);
@@ -64,14 +74,13 @@ class J2Utilities {
 		return true;
 	}
 
-
 	/**
 	 * Method to convert an object or an array to csv
 	 * @param mixed $data array or object
 	 * @return string comma separated value
 	 */
-
-	public function to_csv($data) {
+	public function to_csv($data)
+    {
 		$csv = '';
 
 		//data is set ?
@@ -96,13 +105,15 @@ class J2Utilities {
 	 * @return mixed
 	 */
 
-	public function stock_qty($qty) {
+	public function stock_qty($qty)
+    {
 		//allow plugins to modify
-		JFactory::getApplication('OnJ2StoreFilterQuantity', array(&$qty));
-		return intval($qty);
+		Factory::getApplication('OnJ2StoreFilterQuantity', array(&$qty));
+		return (int)$qty;
 	}
 
-	public function errors_to_string($errors) {
+	public function errors_to_string($errors)
+    {
 		return $this->toString($errors);
 	}
 
@@ -164,7 +175,8 @@ class J2Utilities {
 		return htmlentities($text, ENT_QUOTES, 'UTF-8');
 	}
 
-	public function cleanIntArray($array, $db = null) {
+	public function cleanIntArray($array, $db = null)
+    {
 		if (! $db)
 			$db = Factory::getContainer()->get('DatabaseDriver');
 		if (is_array ( $array )) {
@@ -181,8 +193,9 @@ class J2Utilities {
 		}
 	}
 
-	public function getContext($prefix='') {
-		$app = JFactory::getApplication();
+	public function getContext($prefix='')
+    {
+		$app = Factory::getApplication();
 		$context = array();
 		$context[] = 'j2store';
 
@@ -196,9 +209,10 @@ class J2Utilities {
 		return implode('.', $context).$prefix;
 	}
 
-	public function get_formatted_date($local=true, $options=array()) {
-		$tz = JFactory::getConfig()->get('offset');
-		$date = JFactory::getDate('now', $tz);
+	public function get_formatted_date($local=true, $options=array())
+    {
+		$tz = Factory::getApplication()->getConfig()->get('offset');
+		$date = Factory::getDate('now', $tz);
 
 		//default to the sql formatted date
 		$result = $date->toSql($local);
@@ -211,24 +225,27 @@ class J2Utilities {
 		return $result;
 	}
 
-	public function generateId($string){
+	public function generateId($string)
+    {
 		if(empty( $string )){
 			return $string;
 		}
 		$string = str_replace ( '(','' , $string );
 		$string = str_replace ( ')','' , $string );
 		$string = str_replace ( '.','' , $string );
-		return JFilterOutput::stringURLSafe ( $string );
+		return OutputFilter::stringURLSafe ( $string );
 	}
 
-	public function activeMenu($options = array()) {
-		$app = JFactory::getApplication('site');
+	public function activeMenu($options = array())
+    {
+		$app = Factory::getApplication('site');
 		return $app->getMenu()->getActive()->id;
 	}
 
-	public function world_currencies() {
-		return array (
-			'USD' => 'United States Dollar',
+	public function world_currencies()
+    {
+        return [
+            'USD' => 'United States Dollar',
 			'EUR' => 'Euro Member Countries',
 			'GBP' => 'United Kingdom Pound',
 			'AUD' => 'Australia Dollar',
@@ -306,7 +323,6 @@ class J2Utilities {
             'NAD' => 'Namibia Dollar',
             'NPR' => 'Nepal Rupee',
             'ANG' => 'Netherlands Antilles Guilder',
-
             'NIO' => 'Nicaragua Cordoba',
             'NGN' => 'Nigeria Naira',
             'NOK' => 'Norway Krone',
@@ -339,14 +355,13 @@ class J2Utilities {
             'TRL' => 'Turkey Lira',
             'TVD' => 'Tuvalu Dollar',
             'UAH' => 'Ukraine Hryvna',
-
             'UYU' => 'Uruguay Peso',
             'UZS' => 'Uzbekistan Som',
             'VEF' => 'Venezuela Bolivar',
             'VND' => 'Viet Nam Dong',
             'YER' => 'Yemen Rial',
-            'ZWD' => 'Zimbabwe Dollar'
-        );
+            'ZWD' => 'Zimbabwe Dollar',
+        ];
 	}
 
 	/**
@@ -354,12 +369,14 @@ class J2Utilities {
      * @param $str - un-process content
      * @return string
 	*/
-	function text_sanitize($str){
+	function text_sanitize($str)
+    {
         $str = $this->remove_unwanted_text($str);
         return $str;
     }
 
-	function remove_unwanted_text($str, $keep_newlines = true){
+	function remove_unwanted_text($str, $keep_newlines = true)
+    {
         $filtered = $this->convert_utf8( $str );
         if ( strpos( $filtered, '<' ) !== false ) {
             // This will strip extra whitespace for us.
@@ -389,7 +406,8 @@ class J2Utilities {
         return $filtered;
     }
 
-    function convert_utf8($string, $strip = false){
+    function convert_utf8($string, $strip = false)
+    {
         // Check for support for utf8 in the installed PCRE library once and store the result in a static
         static $utf8_pcre = null;
         if ( ! isset( $utf8_pcre ) ) {
@@ -412,8 +430,8 @@ class J2Utilities {
         return '';
     }
 
-
-    function strip_all_tags( $string, $remove_breaks = false ) {
+    function strip_all_tags( $string, $remove_breaks = false )
+    {
         $string = preg_replace( '@<(script|style)[^>]*?>.*?</\\1>@si', '', $string );
         $string = strip_tags( $string );
 
@@ -424,28 +442,29 @@ class J2Utilities {
         return trim( $string );
     }
 
-    function convert_utc_current($date,$format = 'Y-m-d H:i:s'){
-        $nullDate =  JFactory::getDbo()->getNullDate();
+    function convert_utc_current($date,$format = 'Y-m-d H:i:s')
+    {
+        $nullDate =  Factory::getContainer()->get('DatabaseDriver')->getNullDate();
         if(empty($date) || $date == $nullDate){
             return $nullDate;
         }
-        $from_date = JFactory::getDate($date,'UTC');
-        $tz = JFactory::getConfig()->get('offset');
+        $from_date = Factory::getDate($date,'UTC');
+        $tz = Factory::getApplication()->getConfig()->get('offset');
         $timezone = new DateTimeZone($tz);
         $from_date->setTimezone($timezone);
         return $from_date->format($format,true);
     }
 
-    function convert_current_to_utc($date,$format = 'Y-m-d H:i:s'){
-        $nullDate =  JFactory::getDbo()->getNullDate();
+    function convert_current_to_utc($date,$format = 'Y-m-d H:i:s')
+    {
+        $nullDate =  Factory::getContainer()->get('DatabaseDriver')->getNullDate();
         if(empty($date) || $date == $nullDate){
             return $nullDate;
         }
-        $tz = JFactory::getConfig()->get('offset');
-        $from_date = JFactory::getDate($date,$tz);
+        $tz = Factory::getApplication()->getConfig()->get('offset');
+        $from_date = Factory::getDate($date,$tz);
         $timezone = new DateTimeZone('UTC');
         $from_date->setTimezone($timezone);
         return $from_date->format($format);
     }
 }
-

@@ -1,7 +1,7 @@
 <?php
 /**
  * @package J2Store
- * @copyright Copyright (c)2014-17 Ramesh Elamathi / J2Store.org
+ * @copyright Copyright (c)2014-24 Ramesh Elamathi / J2Store.org
  * @license GNU GPL v3 or later
  */
 
@@ -441,7 +441,15 @@ class J2StoreModelProducts extends F0FModel {
                     exit;
                 }
                 // Find the parent path to our subfolder
-                $parent = JPath::clean( @realpath($folder.'/'.$subfolder.'/..') );
+
+				$realpath = @realpath($folder.'/'.$subfolder.'/..');
+				// realpath may return false which cannot be used as entry value for Path::clean
+				if ($realpath) {
+					$parent = JPath::clean($realpath);
+				} else {
+					$parent = '';
+				}
+
                 $parent = trim( str_replace(JPath::clean($folder), '', $parent) , '/\\' );
                 $folder = JPath::clean ( $folder . '/' . $subfolder );
 

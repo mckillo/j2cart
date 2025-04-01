@@ -7,10 +7,12 @@
 // No direct access to this file
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Factory;
+
 class J2StoreViewVendors extends F0FViewHtml {
 	 protected function onAdd($tpl=null){
-		$app = JFactory::getApplication();
-		$user = JFactory::getUser();
+		$app = Factory::getApplication();
+		$user = Factory::getUser();
 		$model = $this->getModel('Vendors');
 		$this->item = $model->getItem();
 

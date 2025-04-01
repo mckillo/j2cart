@@ -6,6 +6,9 @@
 */
 // No direct access to this file
 defined('_JEXEC') or die;
+
+use Joomla\CMS\Factory;
+
 $platform = J2Store::platform();
 $platform->loadExtra('behavior.modal');
 $this->params = J2Store::config();
@@ -34,7 +37,7 @@ $page_heading_text = $page_heading->get('page_heading','');
     $return_url = $platform->getMyprofileUrl(array(),false,true);
 	$return = base64_encode($return_url);
 	?>
-	<?php $user = JFactory::getUser (); ?>
+	<?php $user = Factory::getApplication()->getIdentity(); ?>
 	<?php if($user->id > 0): ?>
 	<div class="pull-right">
 		<form action="<?php echo JRoute::_('index.php'); ?>" method="post" id="login-form" class="form-vertical">

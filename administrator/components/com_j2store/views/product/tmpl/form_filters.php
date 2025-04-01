@@ -1,12 +1,16 @@
 <?php
 /**
- * @package J2Store
- * @copyright Copyright (c)2014-17 Ramesh Elamathi / J2Store.org
- * @copyright Copyright (c) 2024 J2Commerce . All rights reserved.
- * @license GNU GPL v3 or later
+ * @package     Joomla.Component
+ * @subpackage  J2Store
+ *
+ * @copyright Copyright (C) 2014-24 Ramesh Elamathi / J2Store.org
+ * @copyright Copyright (C) 2025 J2Commerce, LLC. All rights reserved.
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GNU/GPLv3 or later
+ * @website https://www.j2commerce.com
  */
-// No direct access to this file
-defined('_JEXEC') or die('Restricted access');
+
+defined('_JEXEC') or die;
+
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
@@ -15,8 +19,6 @@ $wa = Factory::getApplication()->getDocument()->getWebAssetManager();
 
 $style = '.autocomplete-list{background: var(--form-control-bg);max-height: 200px;overflow-y: auto;width: 100%;}.autocomplete-list.autocomplete-active{border: var(--form-control-border);}.autocomplete-item{padding: 8px;cursor: pointer;font-size: .8rem;}.autocomplete-item:hover {background-color: #f0f0f0;}';
 $wa->addInlineStyle($style, [], []);
-
-
 ?>
 
 <fieldset class="options-form">
@@ -25,7 +27,6 @@ $wa->addInlineStyle($style, [], []);
 		<?php  echo $this->loadTemplate('ajax_avfilter');?>
     </div>
 </fieldset>
-
 
 <script type="text/javascript">
     var total_variants = <?php echo $this->item->productfilter_pagination->total; ?>;

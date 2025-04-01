@@ -1,16 +1,23 @@
 <?php
 /**
- * @package J2Store
- * @copyright Copyright (c)2014-17 Ramesh Elamathi / J2Store.org
- * @copyright Copyright (c) 2024 J2Commerce . All rights reserved.
- * @license GNU GPL v3 or later
+ * @package     Joomla.Component
+ * @subpackage  J2Store
+ *
+ * @copyright Copyright (C) 2014-24 Ramesh Elamathi / J2Store.org
+ * @copyright Copyright (C) 2025 J2Commerce, LLC. All rights reserved.
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GNU/GPLv3 or later
+ * @website https://www.j2commerce.com
  */
 
 defined('_JEXEC') or die;
 
 use Joomla\CMS\Factory;
+use Joomla\CMS\Filter\InputFilter;
 use Joomla\CMS\Language\Text;
+use Joomla\CMS\Mail\MailerFactoryInterface;
+use Joomla\CMS\Session\Session;
 use Joomla\CMS\Toolbar\ToolbarHelper;
+use Joomla\CMS\Uri\Uri;
 
 require_once JPATH_ADMINISTRATOR . '/components/com_j2store/controllers/traits/list_view.php';
 
@@ -22,7 +29,6 @@ class J2StoreControllerConfigurations extends F0FController
 
     public function __construct($config)
     {
-
         parent::__construct($config);
         $this->registerTask('apply', 'save');
         $this->registerTask('saveNew', 'save');
@@ -41,7 +47,7 @@ class J2StoreControllerConfigurations extends F0FController
     {
         $platform = J2Store::platform();
 
-        $platform->loadExtra('behavior.multiselect');
+        //$platform->loadExtra('behavior.multiselect');
         $vars = $this->getBaseVars();
         $app = $platform->application();
         $option = $app->input->getCmd('option', 'com_foobar');
@@ -53,11 +59,11 @@ class J2StoreControllerConfigurations extends F0FController
 	    ToolBarHelper::apply();
 	    ToolBarHelper::save();
 	    ToolBarHelper::cancel();
-        $model = F0FModel::getTmpInstance('Configurations', 'J2StoreModel');
+        $model = J2Store::fof()->getModel('Configurations', 'J2StoreModel');
         $configurations = $model->getItemList();
         $vars->item = new stdClass();
         foreach ($configurations as $key => $configuration) {
-            if ($key == 'limit_orderstatuses') {
+            if ($key === 'limit_orderstatuses') {
                 $vars->item->$key = explode(',', $configuration->config_meta_value);
             } else {
                 $vars->item->$key = $configuration->config_meta_value;
@@ -540,7 +546,7 @@ class J2StoreControllerConfigurations extends F0FController
                 ),
             )
         );
-        $payment_model = F0FModel::getTmpInstance('Payments', 'J2StoreModel');
+        $payment_model = J2Store::fof()->getModel('Payments', 'J2StoreModel');
         $default_payment_list = $payment_model->enabled(1)->getList();
         $payment_list = array();
         foreach ($default_payment_list as $payment) {
@@ -798,7 +804,7 @@ class J2StoreControllerConfigurations extends F0FController
                 ),
             )
         );
-        $order_status_model = F0FModel::getTmpInstance('Orderstatuses', 'J2StoreModel');
+        $order_status_model = J2Store::fof()->getModel('Orderstatuses', 'J2StoreModel');
         $default_order_status_list = $order_status_model->enabled(1)->getList();
         $order_status = array();
         $order_status['*'] = Text::_('JALL');
@@ -865,6 +871,14 @@ class J2StoreControllerConfigurations extends F0FController
                     'value' => isset($vars->item->backend_voucher_to_shipping) && !is_null($vars->item->backend_voucher_to_shipping) ? $vars->item->backend_voucher_to_shipping : 1,
                     'options' => array('class' => 'radio-list','options' => array(0 => Text::_('JNO'), 1 => Text::_('JYES')))
                 ),
+                'export_column_per_product_option' => array(
+                    'label' => 'J2STORE_CONF_EXPORT_PRODUCT_OPTIONS_PER_COLUMN_LABEL',
+                    'type' => 'radiolist',
+                    'name' => 'export_column_per_product_option',
+                    'value' => isset($vars->item->export_column_per_product_option) && !is_null($vars->item->export_column_per_product_option) ? $vars->item->export_column_per_product_option : 0,
+                    'options' => array('class' => 'radio-list','options' => array(0 => Text::_('JNO'), 1 => Text::_('JYES'))),
+                    'desc' => 'J2STORE_CONF_EXPORT_PRODUCT_OPTIONS_PER_COLUMN_DESC'
+                ),
             )
         );
 
@@ -881,6 +895,22 @@ class J2StoreControllerConfigurations extends F0FController
                     'value' => isset($vars->item->send_default_email_template) && !is_null($vars->item->send_default_email_template) ? $vars->item->send_default_email_template : 1,
                     'options' => array('class' => 'form-select', 'options' => array(0 => Text::_('J2STORE_ONLY_SEND_CONFIGURED_MAIL_TEMPLATES'), 1 => Text::_('J2STORE_SEND_DEFAULT_MAIL'))),
                     'desc' => 'J2STORE_CONF_SEND_DEFAULT_EMAIL_TEMPLATE_DESC'
+                ),
+            )
+        );
+        $vars->field_sets[] = array(
+            'id' => 'update_settings',
+            'is_pro' => true,
+            'label' => 'J2STORE_UPDATE_SETTINGS',
+            'class' => 'options-form',
+            'fields' => array(
+                'downloadid' => array(
+                    'label' => 'J2STORE_CONF_UPDATE_DOWNLOADID',
+                    'type' => 'text',
+                    'name' => 'downloadid',
+                    'value' => isset($vars->item->downloadid) && !is_null($vars->item->downloadid) ? $vars->item->downloadid : '',
+                    'options' => array('id' => 'downloadid', 'class' => 'form-control'),
+                    'desc' => 'J2STORE_CONF_UPDATE_DOWNLOADID_DESC'
                 ),
             )
         );
@@ -932,40 +962,50 @@ class J2StoreControllerConfigurations extends F0FController
             )
         );
         echo $this->_getLayout('tab', $vars, 'edit');
-        $platform->addInlineScript('jQuery(document).on(\'change\',"#continue_shopping_page",function(){
-		if(this.value == \'previous\'){
-			jQuery("#continue_shopping_url").closest(\'.control-group\').hide();
-			jQuery("#continue_shopping_menu").closest(\'.control-group\').hide();
-		}
+        $platform->addInlineScript('
+            document.addEventListener("DOMContentLoaded", function() {
+                const continueShoppingPage = document.querySelector("#continue_shopping_page");
+                const cartEmptyRedirect = document.querySelector("#cart_empty_redirect");
 
-		if(this.value ==\'menu\'){
-			jQuery("#continue_shopping_menu").closest(\'.control-group\').show();
-			jQuery("#continue_shopping_url").closest(\'.control-group\').hide();
-		}
+                if (continueShoppingPage) {
+                    continueShoppingPage.addEventListener("change", function() {
+                        const continueShoppingUrl = document.querySelector("#continue_shopping_url")?.closest(".control-group");
+                        const continueShoppingMenu = document.querySelector("#continue_shopping_menu")?.closest(".control-group");
 
-		if(this.value == \'url\'){
-			jQuery("#continue_shopping_url").closest(\'.control-group\').show();
-			jQuery("#continue_shopping_menu").closest(\'.control-group\').hide();
-		}
-	});
-	jQuery(document).on(\'change\',"#cart_empty_redirect",function(){
-	    console.log(this.value);
-		if(this.value == \'cart\'){
-			jQuery("#continue_cart_redirect_menu").closest(\'.control-group\').hide();
-			jQuery("#cart_redirect_page_url").closest(\'.control-group\').hide();
-		}
+                        if (this.value === "previous") {
+                            if (continueShoppingUrl) continueShoppingUrl.style.display = "none";
+                            if (continueShoppingMenu) continueShoppingMenu.style.display = "none";
+                        } else if (this.value === "menu") {
+                            if (continueShoppingMenu) continueShoppingMenu.style.display = "";
+                            if (continueShoppingUrl) continueShoppingUrl.style.display = "none";
+                        } else if (this.value === "url") {
+                            if (continueShoppingUrl) continueShoppingUrl.style.display = "";
+                            if (continueShoppingMenu) continueShoppingMenu.style.display = "none";
+                        }
+                    });
+                }
 
-		if(this.value ==\'menu\'){
-			jQuery("#continue_cart_redirect_menu").closest(\'.control-group\').show();
-			jQuery("#cart_redirect_page_url").closest(\'.control-group\').hide();
-		}
+                if (cartEmptyRedirect) {
+                    cartEmptyRedirect.addEventListener("change", function() {
+                        console.log(this.value);
+                        const cartRedirectMenu = document.querySelector("#continue_cart_redirect_menu")?.closest(".control-group");
+                        const cartRedirectPageUrl = document.querySelector("#cart_redirect_page_url")?.closest(".control-group");
 
-		if(this.value == \'url\'){
-			jQuery("#cart_redirect_page_url").closest(\'.control-group\').show();
-			jQuery("#continue_cart_redirect_menu").closest(\'.control-group\').hide();
-		}
-	});
-	');
+                        if (this.value === "cart") {
+                            if (cartRedirectMenu) cartRedirectMenu.style.display = "none";
+                            if (cartRedirectPageUrl) cartRedirectPageUrl.style.display = "none";
+                        } else if (this.value === "menu") {
+                            if (cartRedirectMenu) cartRedirectMenu.style.display = "";
+                            if (cartRedirectPageUrl) cartRedirectPageUrl.style.display = "none";
+                        } else if (this.value === "url") {
+                            if (cartRedirectPageUrl) cartRedirectPageUrl.style.display = "";
+                            if (cartRedirectMenu) cartRedirectMenu.style.display = "none";
+                        }
+                    });
+                }
+            });
+        ');
+
         $platform->addInlineScript("(function($) {
 		$(document).on('click', '#j2store_testemail', function(e) {
 			e.preventDefault();
@@ -975,7 +1015,7 @@ class J2StoreControllerConfigurations extends F0FController
 				dataType: 'json',
 				beforeSend: function() {
 					$('#email_message').remove();
-					$('#j2store_testemail').after('<span class=\"wait\">&nbsp;<img src=\"" . JUri::root(true) . "/media/j2store/images/loader.gif\" alt=\"\" /></span>');
+					$('#j2store_testemail').after('<span class=\"wait\">&nbsp;<img src=\"" . Uri::root(true) . "/media/j2store/images/loader.gif\" alt=\"\" /></span>');
                 },
                 complete: function() {
                     $('.wait').remove();
@@ -1019,11 +1059,11 @@ class J2StoreControllerConfigurations extends F0FController
     public function save()
     {
         //security check
-        JSession::checkToken() or die('Invalid Token');
-        $app = JFactory::getApplication();
+        Session::checkToken() or die('Invalid Token');
+        $app = Factory::getApplication();
         $data = $app->input->getArray($_POST);
         $task = $this->getTask();
-        $token = JSession::getFormToken();
+        $token = Session::getFormToken();
         unset($data['option']);
         unset($data['task']);
         unset($data['view']);
@@ -1035,15 +1075,14 @@ class J2StoreControllerConfigurations extends F0FController
         $config = J2Store::config();
         $query = 'REPLACE INTO #__j2store_configurations (config_meta_key,config_meta_value) VALUES ';
 
-        jimport('joomla.filter.filterinput');
-        $filter = JFilterInput::getInstance(array(), array(), 1, 1);
+        $filter = InputFilter::getInstance(array(), array(), 1, 1);
         $conditions = array();
         foreach ($data as $metakey => $value) {
             if (is_array($value)) {
                 $value = implode(',', $value);
             }
             //now clean up the value
-            if ($metakey == 'store_billing_layout' || $metakey == 'store_shipping_layout' || $metakey == 'store_payment_layout') {
+            if ($metakey === 'store_billing_layout' || $metakey === 'store_shipping_layout' || $metakey === 'store_payment_layout') {
                 $value = $app->input->get($metakey, '', 'raw');
                 $clean_value = $filter->clean($value, 'html');
 
@@ -1060,7 +1099,7 @@ class J2StoreControllerConfigurations extends F0FController
             $db->setQuery($query);
             $db->execute();
             //update currencies
-            F0FModel::getTmpInstance('Currencies', 'J2StoreModel')->updateCurrencies(false);
+            J2Store::fof()->getModel('Currencies', 'J2StoreModel')->updateCurrencies(false);
             $msg = Text::_('J2STORE_CHANGES_SAVED');
         } catch (Exception $e) {
             $msg = $e->getMessage();
@@ -1084,27 +1123,16 @@ class J2StoreControllerConfigurations extends F0FController
 
     function getPopulatedData(&$data)
     {
-        if(version_compare(JVERSION,'3.99.99','ge')){
-            $data['store_billing_layout'] = '<div class="row">
+        $data['store_billing_layout'] = '<div class="row">
 		<div class="col-md-6">[first_name] [last_name] [email] [phone_1] [phone_2] [company] [tax_number]</div>
 		<div class="col-md-6">[address_1] [address_2] [city] [zip] [country_id] [zone_id]</div>
 		</div>';
-            $data['store_shipping_layout'] = '<div class="row">
+        $data['store_shipping_layout'] = '<div class="row">
 		<div class="col-md-6">[first_name] [last_name] [phone_1] [phone_2] [company]</div>
 		<div class="col-md-6">[address_1] [address_2] [city] [zip] [country_id] [zone_id]</div>
 		</div>';
-        }else{
-            $data['store_billing_layout'] = '<div class="row-fluid">
-		<div class="span6">[first_name] [last_name] [email] [phone_1] [phone_2] [company] [tax_number]</div>
-		<div class="span6">[address_1] [address_2] [city] [zip] [country_id] [zone_id]</div>
-		</div>';
-            $data['store_shipping_layout'] = '<div class="row-fluid">
-		<div class="span6">[first_name] [last_name] [phone_1] [phone_2] [company]</div>
-		<div class="span6">[address_1] [address_2] [city] [zip] [country_id] [zone_id]</div>
-		</div>';
-        }
 
-        $app = JFactory::getApplication();
+        $app = Factory::getApplication();
         $app->input->set('store_billing_layout', $data['store_billing_layout']);
         $app->input->set('store_shipping_layout', $data['store_shipping_layout']);
 
@@ -1112,9 +1140,9 @@ class J2StoreControllerConfigurations extends F0FController
 
     function testemail()
     {
-        $app = JFactory::getApplication();
+        $app = Factory::getApplication();
         //get the config class obj
-        $config = JFactory::getConfig();
+        $config = Factory::getApplication()->getConfig();
         $json = array();
         $email = $app->input->getString('admin_email', '');
 
@@ -1123,7 +1151,7 @@ class J2StoreControllerConfigurations extends F0FController
         } else {
             $admin_emails = explode(',', $email);
             //get the mailer class object
-            $mailer = JFactory::getMailer();
+            $mailer = Factory::getContainer()->get(MailerFactoryInterface::class)->createMailer();
             foreach ($admin_emails as $admin_email) {
                 $mailer->addRecipient($admin_email);
             }
@@ -1149,9 +1177,9 @@ class J2StoreControllerConfigurations extends F0FController
 
     public function regenerateQueuekey()
     {
-        $app = JFactory::getApplication();
+        $app = Factory::getApplication();
         $config = J2Store::config();
-        $queue_string = JFactory::getConfig()->get('sitename', '') . time();
+        $queue_string = Factory::getApplication()->getConfig()->get('sitename', '') . time();
         $queue_key = md5($queue_string);
         $config->saveOne('queue_key', $queue_key);
         $json = array(
@@ -1161,5 +1189,3 @@ class J2StoreControllerConfigurations extends F0FController
         $app->close();
     }
 }
-
-

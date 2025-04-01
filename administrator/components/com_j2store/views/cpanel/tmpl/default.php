@@ -1,115 +1,102 @@
 <?php
 /**
- * @package J2Store
- * @copyright Copyright (c)2014-17 Ramesh Elamathi / J2Store.org
- * @license GNU GPL v3 or later
+ * @package     Joomla.Component
+ * @subpackage  J2Store
+ *
+ * @copyright Copyright (C) 2014-24 Ramesh Elamathi / J2Store.org
+ * @copyright Copyright (C) 2025 J2Commerce, LLC. All rights reserved.
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GNU/GPLv3 or later
+ * @website https://www.j2commerce.com
  */
 
 defined('_JEXEC') or die;
+
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Plugin\PluginHelper;
+use Joomla\CMS\Router\Route;
+
 $platform = J2Store::platform();
 $platform->loadExtra('bootstrap.tooltip');
 $platform->loadExtra('behavior.multiselect');
-$platform->loadExtra('formbehavior.chosen', 'select');
+
 $sidebar = JHtmlSidebar::render();
 $row_class = 'row';
 $col_class = 'col-md-';
-if (version_compare(JVERSION, '3.99.99', 'lt')) {
-    $row_class = 'row-fluid';
-    $col_class = 'span';
-}
 ?>
 <style type="text/css">
 	input[disabled] {
 		background-color: #46a546 !important;
 	}
 </style>
-    <form
-            action="<?php echo JRoute::_('index.php?option=com_j2store&view=cpanel'); ?>"
-            method="post" name="adminForm" id="adminForm">
-<div class="<?php echo $row_class;?>">
-        <?php if(!empty( $sidebar )): ?>
-        <div id="j-sidebar-container" class="<?php echo $col_class;?>2">
-            <?php echo $sidebar ; ?>
-        </div>
-        <div id="j-main-container" class="<?php echo $col_class;?>10">
-            <?php else : ?>
-            <div id="j-main-container">
-                <?php endif;?>
-                <div  class ="box-widget-body ">
-                    <div id="container" class ="box-widget-body " style="clear:both;">
-                        <div class="<?php echo $row_class;?>">
-                            <?php echo J2Store::plugin()->eventWithHtml('BeforeCpanelView'); ?>
-                        </div>
-                        <div class="<?php echo $row_class;?>">
-                            <?php echo J2Store::help()->free_topbar(); ?>
-                        </div>
-                        <div class="<?php echo $row_class;?>">
-                            <div class="<?php echo $col_class;?>12">
-                                <?php echo J2Store::help()->alert(
-                                    'coupon_update',
-                                    JText::_('J2STORE_ATTENTION'),
-                                    JText::_('J2STORE_COUPON_TYPES_EXTENDED_NOTIFICATION')
-                                ); ?>
-                                <?php if(JPluginHelper::isEnabled('system', 'cache')): ?>
-                                    <?php echo J2Store::help()->alert_with_static_message(
-                                        'danger',
-                                        JText::_('J2STORE_ATTENTION'),
-                                        JText::_('J2STORE_SYSTEM_CACHE_ENABLED_NOTIFICATION')
-                                    ); ?>
-                                <?php endif; ?>
-
-                                <?php $content_plugin = JPluginHelper::isEnabled('content', 'socialshare'); ?>
-                                <?php if($content_plugin):?>
-                                    <?php echo J2Store::help()->alert_with_static_message(
-                                        'danger',
-                                        JText::_('J2STORE_ATTENTION'),
-                                        JText::_('J2STORE_CONTENT_SOCIAL_SHARE_ENABLED_WARNING')
-                                    );
-                                    ?>
-                                <?php endif; ?>
-
-                                <div class="subscription_message" style="display:none;">
-                                    <div class="alert alert-block alert-warning">
-                                        <h4>
-                                            <span class="subscription"></span>
-                                        </h4>
-                                    </div>
-                                </div>
-                                <?php echo J2Store::help()->watch_video_tutorials(); ?>
-                                <div class="<?php echo $row_class;?>">
-                                    <!-- Chart-->
-                                    <div class="<?php echo $col_class;?>12 stats-mini">
-                                        <?php echo J2Store::modules()->loadposition('j2store-module-position-1');?>
-                                    </div>
-                                </div>
-                                <div class="<?php echo $row_class;?>">
-                                    <!-- Chart-->
-                                    <div class="<?php echo $col_class;?>12 chart">
-                                        <?php echo J2Store::modules()->loadposition('j2store-module-position-3');?>
-                                    </div>
-                                </div>
-                                <div class="<?php echo $row_class;?>">
-                                    <!-- Statistics-->
-                                    <div class="<?php echo $col_class;?>6 statistics">
-                                        <?php echo J2Store::modules()->loadposition('j2store-module-position-5');?>
-                                    </div>
-                                    <!-- Latest orders -->
-                                    <div class="<?php echo $col_class;?>6 latest_orders">
-                                        <?php echo J2Store::modules()->loadposition('j2store-module-position-4');?>
-                                    </div>
-
-                                </div>
-                            </div>
-                        </div>
+<?php if(!empty( $sidebar )): ?>
+    <div id="j2c-menu" class="mb-4">
+        <?php echo $sidebar ; ?>
+    </div>
+<?php endif;?>
+<div class="j2store">
+    <form action="<?php echo Route::_('index.php?option=com_j2store&view=cpanel'); ?>" method="post" name="adminForm" id="adminForm">
+        <div  class ="box-widget-body ">
+            <div id="container" class ="box-widget-body">
+                <?php echo J2Store::plugin()->eventWithHtml('BeforeCpanelView'); ?>
+                <?php echo J2Store::help()->free_topbar(); ?>
+                <?php //echo J2Store::help()->info_j2commerce(); ?>
+                <?php if(PluginHelper::isEnabled('system', 'cache')): ?>
+                    <?php echo J2Store::help()->alert_with_static_message(
+                        'danger',
+                        Text::_('J2STORE_ATTENTION'),
+                        Text::_('J2STORE_SYSTEM_CACHE_ENABLED_NOTIFICATION')
+                    ); ?>
+                <?php endif; ?>
+                <?php $content_plugin = PluginHelper::isEnabled('content', 'socialshare'); ?>
+                <?php if($content_plugin):?>
+                    <?php echo J2Store::help()->alert_with_static_message(
+                        'danger',
+                        Text::_('J2STORE_ATTENTION'),
+                        Text::_('J2STORE_CONTENT_SOCIAL_SHARE_ENABLED_WARNING')
+                    );
+                    ?>
+                <?php endif; ?>
+                <div class="subscription_message" style="display:none;">
+                    <div class="alert alert-block alert-warning">
+                        <h4>
+                            <span class="subscription"></span>
+                        </h4>
                     </div>
                 </div>
+                <div class="stats-mini">
+                    <?php echo J2Store::modules()->loadposition('j2store-module-position-1');?>
+                </div>
+                <div class="chart">
+                    <?php echo J2Store::modules()->loadposition('j2store-module-position-3');?>
+                </div>
+                <div class="<?php echo $row_class;?>">
+                    <div class="<?php echo $col_class;?>6 statistics">
+                        <?php echo J2Store::modules()->loadposition('j2store-module-position-5');?>
+                    </div>
+                    <div class="<?php echo $col_class;?>6 latest_orders">
+                        <?php echo J2Store::modules()->loadposition('j2store-module-position-4');?>
+                    </div>
+                </div>
+                <?php /*echo J2Store::help()->watch_video_tutorials();*/ ?>
             </div>
-</div>
+        </div>
     </form>
-
+</div>
 <?php
-$document = JFactory::getDocument();
-$platform->addInlineScript('setTimeout(function () {
+$platform->addInlineScript('
+    setTimeout(function () {
+        fetch("index.php?option=com_j2store&view=cpanels&task=getEupdates")
+            .then(response => response.json())
+            .then(json => {
+                if (json["total"]) {
+                    document.querySelector(".eupdate-notification .total").innerHTML = json["total"];
+                    document.querySelector(".eupdate-notification").style.display = "block";
+                }
+            })
+            .catch(error => console.error("Error fetching update data:", error));
+    }, 2000);
+');
+/*$platform->addInlineScript('setTimeout(function () {
 	(function($){
 	$.ajax({
 		  url: "index.php?option=com_j2store&view=cpanels&task=getEupdates",
@@ -123,4 +110,4 @@ $platform->addInlineScript('setTimeout(function () {
 
 	})(j2store.jQuery);
 
-}, 2000);');
+}, 2000);');*/

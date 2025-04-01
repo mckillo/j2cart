@@ -1,15 +1,18 @@
 <?php
 /**
- * @package J2Store
- * @copyright Copyright (c)2014-17 Ramesh Elamathi / J2Store.org
- * @copyright Copyright (c) 2024 J2Commerce . All rights reserved.
- * @license GNU GPL v3 or later
+ * @package     Joomla.Component
+ * @subpackage  J2Store
+ *
+ * @copyright Copyright (C) 2014-24 Ramesh Elamathi / J2Store.org
+ * @copyright Copyright (C) 2025 J2Commerce, LLC. All rights reserved.
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GNU/GPLv3 or later
+ * @website https://www.j2commerce.com
  */
-// No direct access to this file
-defined('_JEXEC') or die('Restricted access');
+
+defined('_JEXEC') or die;
+
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
-
 
 $is_Pro = J2Store::isPro();
 $row_class = 'row';
@@ -17,7 +20,6 @@ $col_class = 'col-md-';
 
 $this->tab_name = 'j2storetab';
 $this->useCoreUI = true;
-
 ?>
 <div class="<?php echo $row_class;?>">
     <div class="<?php echo $col_class;?>12">
@@ -25,7 +27,6 @@ $this->useCoreUI = true;
             <h4 class="alert-heading"><?php echo Text::_('J2STORE_QUICK_HELP'); ?></h4>
             <?php echo Text::_('J2STORE_FLEXIVARIANT_PRODUCT_HELP_TEXT'); ?>
         </div>
-        
         <?php echo HTMLHelper::_('uitab.startTabSet', $this->tab_name, ['active' => 'generalTab', 'recall' => true, 'breakpoint' => 768]); ?>
         <?php echo HTMLHelper::_('uitab.addTab', $this->tab_name, 'generalTab', Text::_('J2STORE_PRODUCT_TAB_GENERAL')); ?>
         <div class="row">
@@ -96,6 +97,5 @@ $this->useCoreUI = true;
         </div>
         <?php echo HTMLHelper::_('uitab.endTab'); ?>
         <?php echo HTMLHelper::_('uitab.endTabSet'); ?>
-        
     </div>
 </div>

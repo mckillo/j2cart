@@ -18,7 +18,7 @@ if(empty($this->address->type)){
 }
 $app = J2Store::platform();
 $back_url = $app->getMyprofileUrl();
-$user = JFactory::getUser();
+$user = Factory::getApplication()->getIdentity();
 if(empty($user->id)){
 	$app->redirect($back_url);
 }

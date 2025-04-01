@@ -7,7 +7,10 @@
 
 // No direct access
 defined('_JEXEC') or die;
-$app = JFactory::getApplication();
+
+use Joomla\CMS\Factory;
+
+$app = Factory::getApplication();
 if(!empty($this->product->addtocart_text)) {
 	$cart_text = JText::_($this->product->addtocart_text);
 } else {

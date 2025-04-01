@@ -1,12 +1,10 @@
-#j2menu .j2right{
-    width: 190px;
+#j2menu .j2right {
     margin-top: -45px;
-    margin-left: -190px;
+    right: 100%;
 }
-#j2menu .j2left{
-    width: 190px;
+#j2menu .j2left {
     margin-top: -45px;
-    margin-left: 158px;
+    left: 100%;
 }
 .j2submenu-list:hover {
     display: block;

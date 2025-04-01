@@ -1,69 +1,55 @@
 <?php
 /**
- * @package J2Store
- * @copyright Copyright (c)2014-17 Ramesh Elamathi / J2Store.org
- * @copyright Copyright (c) 2024 J2Commerce . All rights reserved.
- * @license GNU GPL v3 or later
+ * @package     Joomla.Component
+ * @subpackage  J2Store
+ *
+ * @copyright Copyright (C) 2014-24 Ramesh Elamathi / J2Store.org
+ * @copyright Copyright (C) 2025 J2Commerce, LLC. All rights reserved.
+ * @license https://www.gnu.org/licenses/gpl-3.0.html GNU/GPLv3 or later
+ * @website https://www.j2commerce.com
  */
 
-
-// No direct access to this file
-defined('_JEXEC') or die('Restricted access');
+defined('_JEXEC') or die;
 
 use Joomla\CMS\Language\Text;
+use Joomla\CMS\HTML\HTMLHelper;
 
 $platform = J2Store::platform();
 $platform->loadExtra('behavior.modal');
 $sidebar = JHtmlSidebar::render();
 $this->params = J2Store::config();
-$row_class = 'row';
-$col_class = 'col-md-';
-if (version_compare(JVERSION, '3.99.99', 'lt')) {
-    $row_class = 'row-fluid';
-    $col_class = 'span';
-}
-
 
 $shouldExpand = $this->state->since || $this->state->until || $this->state->paykey || $this->state->moneysum || $this->state->toinvoice || $this->state->coupon_code || $this->state->user_id;
-
 ?>
-<div class="<?php echo $row_class ?>">
-    <?php if (!empty($sidebar)): ?>
-    <div id="j-sidebar-container" class="<?php echo $col_class; ?>2">
+<?php if (!empty($sidebar)): ?>
+    <div id="j2c-menu" class="mb-4">
         <?php echo $sidebar; ?>
     </div>
-    <div id="j-main-container" class="<?php echo $col_class; ?>10">
-        <?php else : ?>
-        <div class="j2store">
-            <?php endif; ?>
-            <form action="index.php?option=com_j2store&view=orders" method="post" name="adminForm" id="adminForm">
-                <?php echo J2Html::hidden('option', 'com_j2store'); ?>
-                <?php echo J2Html::hidden('view', 'orders'); ?>
-                <?php echo J2Html::hidden('task', 'browse', array('id' => 'task')); ?>
-                <?php echo J2Html::hidden('boxchecked', '0'); ?>
-                <?php echo J2Html::hidden('filter_order', ''); ?>
-                <?php echo J2Html::hidden('filter_order_Dir', ''); ?>
-                <?php echo JHTML::_('form.token'); ?>
-                <div class="j2store-order-filters">
-                    <div class="j2store-alert-box" style="display:none;"></div>
-                    <div class="js-stools">
-                        <div class="js-stools-container-bar">
-			                <?php echo $this->loadTemplate('filters'); ?>
-                        </div>
-                        <div class="js-stools-container-filters clearfix bg-white collapse<?php echo $shouldExpand ? ' show' : ''; ?>" id="collapseFilters">
-			                <?php echo $this->loadTemplate('advancedfilters'); ?>
-                        </div>
-                    </div>                    
+<?php endif;?>
+<div class="j2store">
+    <form action="index.php?option=com_j2store&view=orders" method="post" name="adminForm" id="adminForm">
+        <?php echo J2Html::hidden('option', 'com_j2store'); ?>
+        <?php echo J2Html::hidden('view', 'orders'); ?>
+        <?php echo J2Html::hidden('task', 'browse', array('id' => 'task')); ?>
+        <?php echo J2Html::hidden('boxchecked', '0'); ?>
+        <?php echo J2Html::hidden('filter_order', ''); ?>
+        <?php echo J2Html::hidden('filter_order_Dir', ''); ?>
+        <?php echo HTMLHelper::_('form.token'); ?>
+        <div class="j2store-order-filters">
+            <div class="j2store-alert-box" style="display:none;"></div>
+            <div class="js-stools">
+                <div class="js-stools-container-bar">
+                    <?php echo $this->loadTemplate('filters'); ?>
                 </div>
-                <div class="j2store-order-list">
-                    <?php echo $this->loadTemplate('items'); ?>
+                <div class="js-stools-container-filters clearfix bg-white collapse<?php echo $shouldExpand ? ' show' : ''; ?>" id="collapseFilters">
+                    <?php echo $this->loadTemplate('advancedfilters'); ?>
                 </div>
-            </form>
-            <?php if (!empty($sidebar)): ?>
+            </div>
         </div>
-        <?php else : ?>
-    </div>
-<?php endif; ?>
+        <div class="j2store-order-list">
+            <?php echo $this->loadTemplate('items'); ?>
+        </div>
+    </form>
 </div>
 <script type="text/javascript">
     /**

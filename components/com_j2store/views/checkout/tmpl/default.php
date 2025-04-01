@@ -14,10 +14,13 @@
 
 // no direct access
 defined( '_JEXEC' ) or die( 'Restricted access' );
+
+use Joomla\CMS\Factory;
+
 $platform = J2Store::platform();
 $action = $platform->getCheckoutUrl();
 $ajax_base_url = JRoute::_('index.php');
-$app = JFactory::getApplication();
+$app = Factory::getApplication();
 $active_menu = $app->getMenu()->getActive();
 
 $page_heading = (isset($active_menu->params) && is_object($active_menu->params)) ? $active_menu->getParams(): $platform->getRegistry('{}');

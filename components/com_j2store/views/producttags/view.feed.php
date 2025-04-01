@@ -6,6 +6,8 @@
  */
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Factory;
+
 /**
  * Frontpage View class
  *
@@ -47,7 +49,7 @@ class J2StoreViewProducttags extends JViewLegacy
 			$link = $platform->getProductUrl(array('task' => 'view','id' => $row->j2store_product_id),true);
 			// Get row fulltext
 			$description = ($params->get('feed_summary', 0) ? $row->product_short_desc . $row->product_long_desc : $row->product_short_desc);
-			$user = JFactory::getUser($row->created_by);
+            $user = Factory::getApplication()->getIdentity($row->created_by);
 			$author      = $user->name;
 
 			// Load individual item creator class
