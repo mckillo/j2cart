@@ -2,7 +2,7 @@
 /**
  * @package J2Store
  * @copyright Copyright (c)2014-24 Ramesh Elamathi / J2Store.org
- * @copyright Copyright (c) 2024 J2Commerce . All rights reserved.
+ * @copyright Copyright (C) 2025 J2Commerce, LLC. All rights reserved.
  * @license GNU GPL v3 or later
  */
 
@@ -25,7 +25,7 @@ $alert_html = '<joomla-alert type="danger" close-text="Close" dismiss="true" rol
 if (version_compare(JVERSION, '3.99.99', 'lt')) {
     $row_class = 'row-fluid';
     $col_class = 'span';
-    $alert_html = '<div class="alert alert-error alert-danger">'.Text::_('JLIB_FORM_CONTAINS_INVALID_FIELDS').'<button type="button" class="close" data-dismiss="alert">×</button></div>' ;
+    $alert_html = '<div class="alert alert-error alert-danger">'.htmlspecialchars(Text::_('JLIB_FORM_CONTAINS_INVALID_FIELDS')).'<button type="button" class="close" data-dismiss="alert">×</button></div>' ;
 }
 $config = Factory::getApplication()->getConfig();
 $asset_id = $config->get('asset_id');

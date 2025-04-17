@@ -19,7 +19,7 @@ require_once JPATH_ADMINISTRATOR.'/components/com_j2store/helpers/message.php';
 $platform = J2Store::platform();
 $platform->loadExtra('behavior.modal');
 $platform->loadExtra('behavior.formvalidator');
-$alert_html = '<joomla-alert type="danger" close-text="Close" dismiss="true" role="alert" style="animation-name: joomla-alert-fade-in;"><div class="alert-heading"><span class="error"></span><span class="visually-hidden">Error</span></div><div class="alert-wrapper"><div class="alert-message" >'.Text::_('JLIB_FORM_CONTAINS_INVALID_FIELDS').'</div></div></joomla-alert>' ;
+$alert_html = '<joomla-alert type="danger" close-text="Close" dismiss="true" role="alert" style="animation-name: joomla-alert-fade-in;"><div class="alert-heading"><span class="error"></span><span class="visually-hidden">Error</span></div><div class="alert-wrapper"><div class="alert-message" >'.htmlspecialchars(Text::_('JLIB_FORM_CONTAINS_INVALID_FIELDS')).'</div></div></joomla-alert>' ;
 ?>
 <script  type="text/javascript">
     function insertText(value) {
@@ -98,7 +98,7 @@ $alert_html = '<joomla-alert type="danger" close-text="Close" dismiss="true" rol
                                                                 </div>
                                                             </div>
                                                             <div>
-							                                    <?php echo include_once JPATH_ADMINISTRATOR.'/components/com_j2store/views/emailtemplate/tmpl/form_tags.php' ;?>
+							                                    <?php include_once JPATH_ADMINISTRATOR.'/components/com_j2store/views/emailtemplate/tmpl/form_tags.php' ;?>
                                                             </div>
                                                         </div>
                                                         <div class="col-lg-3" style="<?php echo isset($field['style']) && !empty($field['style']) ? $field['style']: '';?>">

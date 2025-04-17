@@ -24,7 +24,7 @@ $platform->loadExtra('behavior.modal');
 $row_class = 'row';
 $col_class = 'col-md-';
 $product_type_class = 'badge bg-success';
-$alert_html = '<joomla-alert type="danger" close-text="Close" dismiss="true" role="alert" style="animation-name: joomla-alert-fade-in;"><div class="alert-heading"><span class="error"></span><span class="visually-hidden">Error</span></div><div class="alert-wrapper"><div class="alert-message" >'.Text::_('JLIB_FORM_CONTAINS_INVALID_FIELDS').'</div></div></joomla-alert>' ;
+$alert_html = '<joomla-alert type="danger" close-text="Close" dismiss="true" role="alert" style="animation-name: joomla-alert-fade-in;"><div class="alert-heading"><span class="error"></span><span class="visually-hidden">Error</span></div><div class="alert-wrapper"><div class="alert-message" >'.htmlspecialchars(Text::_('JLIB_FORM_CONTAINS_INVALID_FIELDS')).'</div></div></joomla-alert>' ;
 
 $wa = Factory::getApplication()->getDocument()->getWebAssetManager();
 $style = '.j2store-product-edit-form .input-group .form-check.form-switch .form-check-input{min-width:0;}';

@@ -1,8 +1,8 @@
 <?php
 /**
  * @package J2Store
- * @copyright Copyright (c)2014-24 Ramesh Elamathi / J2Store.org
- * @copyright Copyright (c) 2024 J2Commerce . All rights reserved.
+ * @copyright Copyright (c)2014-17 Ramesh Elamathi / J2Store.org
+ * @copyright Copyright (C) 2025 J2Commerce LLC. All rights reserved.
  * @license GNU GPL v3 or later
  */
 
@@ -24,12 +24,31 @@ $danger_class = $platform->getLabel('danger');
 HTMLHelper::_('bootstrap.offcanvas', '[data-bs-toggle="offcanvas"]');
 HTMLHelper::_('bootstrap.tooltip', '[data-bs-toggle="tooltip"]', ['placement' => 'left']);
 
+$currentOrder = $this->state->filter_order ?? 'j2store_product_id';
+$currentDir = strtoupper($this->state->filter_order_Dir ?? 'ASC');
 
+$dir = ($currentOrder === 'j2store_product_id' && $currentDir === 'ASC') ? 'DESC' : 'ASC';
+$session = Factory::getApplication()->getSession();
+$session_dir = Factory::getApplication()->getSession()->set('j2store_sort_order', $currentDir);
+if($currentDir !== $session_dir){
+    $dir = $session_dir;
+}
+
+$link = 'index.php?' . http_build_query(array_merge($_GET, [
+        'filter_order' => 'j2store_product_id',
+        'filter_order_Dir' => $dir,
+]));
+$hasFilterOrderDir = isset($_GET['filter_order_Dir']);
+
+if (!$hasFilterOrderDir && $currentDir !== $session_dir) {
+    Factory::getApplication()->redirect($link);
+    return;
+}
 $wa = Factory::getApplication()->getDocument()->getWebAssetManager();
-$wa->useScript('table.columns')
-	->useScript('multiselect');
+$wa->useScript('table.columns')->useScript('multiselect');
 
-    ?>
+?>
+
 <table class="table itemList" id="productList">
     <caption class="visually-hidden">
 		<?php echo Text::_('J2STORE_PRODUCTS'); ?>,
@@ -40,7 +59,10 @@ $wa->useScript('table.columns')
 		<tr>
 			<td class="w-1 text-center"><input type="checkbox" name="checkall-toggle" value="" title="<?php echo Text::_('JGLOBAL_CHECK_ALL'); ?>" onclick="Joomla.checkAll(this)" /></td>
 			<th scope="col" class="text-center d-none d-md-table-cell">
-				<?php echo HTMLHelper::_('grid.sort', 'J2STORE_PRODUCT_ID', 'j2store_product_id', $this->state->filter_order_Dir, $this->state->filter_order); ?>
+                <a href="<?php echo $link; ?>">
+                    <?php echo Text::_('J2STORE_PRODUCT_ID'); ?>
+                    <?php echo ($currentOrder === 'j2store_product_id') ? ($currentDir === 'ASC' ? '↑' : '↓') : ''; ?>
+                </a>
             </th>
             <th scope="col" style="min-width:100px" class="title">
                 <?php echo Text::_('J2STORE_PRODUCT_NAME'); ?>
@@ -50,10 +72,10 @@ $wa->useScript('table.columns')
 			<th scope="col" class="d-none d-lg-table-cell"><?php echo Text::_('J2STORE_PRODUCT_PRICE'); ?></th>
 			<th scope="col" class="text-center d-none d-xxl-table-cell"><?php  echo Text::_('J2STORE_SHIPPING'); ?></th>
             <?php if($this->params->get('enable_inventory', 0)):?>
-                <th scope="col" class="d-none d-xxl-table-cell"><?php  echo Text::_('J2STORE_CURRENT_STOCK'); ?></th>
+                <th scope="col" class="d-none d-xxl-table-cell"><?php echo Text::_('J2STORE_CURRENT_STOCK'); ?></th>
             <?php endif;?>
-            <th scope="col" class="d-none d-xxl-table-cell"><?php echo HTMLHelper::_('grid.sort',  'J2STORE_SOURCE', 'product_source', $this->state->filter_order_Dir, $this->state->filter_order ); ?></th>
-			<th scope="col" class="text-center d-none d-xxl-table-cell"><?php  echo HTMLHelper::_('grid.sort',  'J2STORE_SOURCE_ID', 'product_source_id', $this->state->filter_order_Dir, $this->state->filter_order ); ?></th>
+            <th scope="col" class="d-none d-xxl-table-cell"><?php echo Text::_('J2STORE_SOURCE'); ?></th>
+			<th scope="col" class="text-center d-none d-xxl-table-cell"><?php echo Text::_('J2STORE_SOURCE_ID'); ?></th>
 		</tr>
 	</thead>
 	<tbody>
@@ -139,10 +161,10 @@ $wa->useScript('table.columns')
                                 <div class="offcanvas-body">
                                     <div class="d-flex align-items-center justify-content-between mb-1">
                                         <div class="small">
-                                            <i class="fa-solid fa-box text-danger"></i> = <?php echo Text::_('J2STORE_PRODUCT_SHIPPING_ENABLED_NO');?>
+                                            <i class="fas fa-solid fa-box text-danger"></i> = <?php echo Text::_('J2STORE_PRODUCT_SHIPPING_ENABLED_NO');?>
                                         </div>
                                         <div class="small">
-                                            <i class="fa-solid fa-box text-success"></i> = <?php echo Text::_('J2STORE_PRODUCT_SHIPPING_ENABLED_YES');?>
+                                            <i class="fas fa-solid fa-box text-success"></i> = <?php echo Text::_('J2STORE_PRODUCT_SHIPPING_ENABLED_YES');?>
                                         </div>
                                     </div>
                                     <?php
@@ -155,7 +177,7 @@ $wa->useScript('table.columns')
                                                 <div class="list-group-item mb-1">
                                                     <div class="d-flex w-100 justify-content-between">
                                                         <h5 class="mb-1"><?php echo J2Store::product()->getVariantNamesByCSV($variant->variant_name); ?></h5>
-                                                        <?php echo (isset($variant->shipping) && ($variant->shipping)) ? '<i class="fa-solid fa-box text-success"></i>' : '<i class="fa-solid fa-box text-danger"></i>'?>
+                                                        <?php echo (isset($variant->shipping) && ($variant->shipping)) ? '<i class="fas fa-solid fa-box text-success"></i>' : '<i class="fas fa-solid fa-box text-danger"></i>'?>
                                                     </div>
                                                     <div class="small text-capitalize"><?php echo Text::_('J2STORE_VARIANT_PRICE')?>:<b class="ms-2 text-capitalize"><?php echo J2store::currency()->format($variant->price); ?></b></div>
                                                     <div class="small text-capitalize"><?php echo Text::_('J2STORE_VARIANT_SKU')?>:<b class="ms-2 text-capitalize"><?php echo $variant->sku; ?></b></div>

@@ -6,7 +6,7 @@
  * @package     Joomla 5.x
  * @subpackage  J2 Store
  * @copyright   Copyright (c)2014-17 Ramesh Elamathi / J2Store.org
- * @copyright   Copyright (c) 2024 J2Commerce . All rights reserved.
+ * @copyright   Copyright (C) 2025 J2Commerce, LLC. All rights reserved.
  * @license     GNU GPL v3 or later
  * @link        https://www.j2commerce.com
  * --------------------------------------------------------------------------------
