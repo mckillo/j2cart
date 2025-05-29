@@ -262,7 +262,7 @@ $search = htmlspecialchars($this->state->search);
         </div>
         <?php echo $this->pagination->getListFooter(); ?>
     <?php else:?>
-    <div class="alert alert-message"><?php echo Text::sprintf('J2STORE_SHIPPING_TROUBLESHOOT_NOTE_MESSAGE','index.php?option=com_j2store&view=shippings',J2Store::buildHelpLink('support/user-guide/standard-shipping.html', 'shipping'));?></div>
+    <div class="alert alert-message"><?php echo Text::sprintf('J2STORE_SHIPPING_TROUBLESHOOT_NOTE_MESSAGE','index.php?option=com_j2store&view=shippings',J2Store::buildHelpLink('shipping-methods/standard-shipping-methods', 'shipping'));?></div>
     <?php endif;?>
     </form>
 </div>

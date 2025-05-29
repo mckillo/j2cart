@@ -23,7 +23,7 @@ $platform->loadExtra('dropdown.init');
 
 $updates = J2Store::fof()->getModel('EUpdates', 'J2StoreModel')->getUpdates();
 
-$update_link = J2Store::buildHelpLink('my-downloads.html', 'update');
+$update_link = J2Store::buildSiteLink('my-account/my-downloads', 'update');
 
 $sidebar = JHtmlSidebar::render();
 J2Store::fof()->getModel('Updates', 'J2StoreModel')->refreshUpdateSite();

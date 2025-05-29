@@ -134,7 +134,7 @@ class J2StoreModelProductsBehaviorFlexiVariable extends F0FModelBehavior
             }
         }
 
-        if(is_object($data['quantity']) && (!isset($data['quantity']->product_attributes) || empty($data['quantity']->product_attributes))){
+        if(isset($data['quantity']) && is_object($data['quantity']) && (!isset($data['quantity']->product_attributes) || empty($data['quantity']->product_attributes))){
             $data['quantity']->product_attributes = '';
         }
         $quantity_integer_array = array('quantity');
@@ -342,6 +342,7 @@ class J2StoreModelProductsBehaviorFlexiVariable extends F0FModelBehavior
         } else {
             $db->insertObject('#__j2store_productprice_index', $object);
         }
+
     }
 
     public function onBeforeDelete(&$model)
@@ -555,7 +556,7 @@ class J2StoreModelProductsBehaviorFlexiVariable extends F0FModelBehavior
         $product_variant->load(array('variant_id'=>$variant->j2store_variant_id));
         return $product_variant->product_optionvalue_ids;
     }
-
+    
     public function onUpdateProduct(&$model, &$product)
     {
         $platform = J2Store::platform();
@@ -662,7 +663,7 @@ class J2StoreModelProductsBehaviorFlexiVariable extends F0FModelBehavior
 
         if($product_helper->managing_stock($variant)){
             if($variant->availability) {
-	            $displayStock = $product_helper->displayStock($variant, $params);
+                $displayStock = $product_helper->displayStock($variant, $params);
                 $return['stock_status'] = $displayStock ?: 'Available';
             }else {
                 $return['stock_status'] = Text::_('J2STORE_OUT_OF_STOCK');
@@ -683,7 +684,7 @@ class J2StoreModelProductsBehaviorFlexiVariable extends F0FModelBehavior
             $return['pricing']['class'] = 'hide';
         }
         $return['pricing']['discount_text'] = '';
-        if( isset($variant->pricing->is_discount_pricing_available)) {
+        if( isset($variant->pricing->is_discount_pricing_available) && $variant->pricing->base_price > 0) {
             $discount = (1 - ($variant->pricing->price / $variant->pricing->base_price)) * 100;
             if ($discount > 0){
                 $return['pricing']['discount_text'] = Text::sprintf('J2STORE_PRODUCT_OFFER',round($discount).'%');
@@ -691,18 +692,18 @@ class J2StoreModelProductsBehaviorFlexiVariable extends F0FModelBehavior
         }
         //dimensions
         $return['dimensions'] = round($variant->length,2).' x '.round($variant->width,2).' x '.round($variant->height,2).' '.$variant->length_title;
-	    $return['weight'] = round($variant->weight,2).' '.$variant->weight_title;
-	    $return['length'] = round($variant->length,2).' '.$variant->length_title;
-	    $return['width'] = round($variant->width,2).' '.$variant->length_title;
-	    $return['height'] = round($variant->height,2).' '.$variant->length_title;
+        $return['weight'] = round($variant->weight,2).' '.$variant->weight_title;
+        $return['length'] = round($variant->length,2).' '.$variant->length_title;
+        $return['width'] = round($variant->width,2).' '.$variant->length_title;
+        $return['height'] = round($variant->height,2).' '.$variant->length_title;
         $return['weight_raw'] = round($variant->weight,2);
         $return['length_raw'] = round($variant->length,2);
         $return['width_raw'] = round($variant->width,2);
         $return['height_raw'] = round($variant->height,2);
-	    $return['dimensions_unit'] = $variant->length_title;
-	    $return['length_title'] = $variant->length_title . ($variant->length > 1 ? ($variant->length_title === 'Inch' ? 'es' : 's') : '');
-	    $return['width_title'] = $variant->length_title . ($variant->width > 1 ? ($variant->length_title === 'Inch' ? 'es' : 's') : '');
-	    $return['height_title'] = $variant->length_title . ($variant->height > 1 ? ($variant->length_title === 'Inch' ? 'es' : 's') : '');
+        $return['dimensions_unit'] = $variant->length_title;
+        $return['length_title'] = $variant->length_title . ($variant->length > 1 ? ($variant->length_title === 'Inch' ? 'es' : 's') : '');
+        $return['width_title'] = $variant->length_title . ($variant->width > 1 ? ($variant->length_title === 'Inch' ? 'es' : 's') : '');
+        $return['height_title'] = $variant->length_title . ($variant->height > 1 ? ($variant->length_title === 'Inch' ? 'es' : 's') : '');
         $return['weight_unit'] = $variant->weight_unit;
         $return['weight_title'] = $variant->weight_title . ($variant->weight > 1 ? 's' : '');
         J2Store::plugin()->event('AfterUpdateProductReturn',array(&$return,$product,$params));

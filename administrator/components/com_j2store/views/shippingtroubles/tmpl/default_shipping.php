@@ -66,7 +66,7 @@ $this->tab_name = 'com-j2store-wizard';
             <?php endif;?>
         <?php echo HTMLHelper::_('uitab.endTabSet'); ?>
     <?php else: ?>
-        <div class="alert alert-danger"><?php echo Text::sprintf('J2STORE_SHIPPING_TROUBLESHOOT_NOTE_MESSAGE', 'index.php?option=com_j2store&view=shippings', J2Store::buildHelpLink('support/user-guide/standard-shipping', 'shipping')); ?></div>
+        <div class="alert alert-danger"><?php echo Text::sprintf('J2STORE_SHIPPING_TROUBLESHOOT_NOTE_MESSAGE', 'index.php?option=com_j2store&view=shippings', J2Store::buildHelpLink('shipping-methods/standard-shipping-methods', 'shipping')); ?></div>
     <?php endif; ?>
     <div class="text-center mt-3">
         <a class="btn btn-primary" href="<?php echo Route::_('index.php?option=com_j2store&view=shippingtroubles&layout=default_shipping_product'); ?>">

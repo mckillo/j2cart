@@ -1113,6 +1113,26 @@ class J2StoreTableOrder extends F0FTable
 		J2Store::plugin ()->event ( "PrepareOrderInformation", array( $this ) );
 	}
 
+    /**
+     * Method to add tax.
+     *
+     * @param string $name
+     * @param float $rate
+     * @param float $amount
+     * @param int $order_id
+     */
+    public function add_tax($name, $rate, $amount, $order_id = null)
+    {
+        $ordertax = F0FTable::getAnInstance('Ordertax', 'J2StoreTable')->getClone();
+        $ordertax->ordertax_title = $name;
+        $ordertax->ordertax_percent = $rate;
+        $ordertax->ordertax_amount = $amount;
+        if (!empty($order_id)) {
+            $ordertax->order_id = $order_id;
+        }
+        $this->_ordertaxes[] = $ordertax;
+    }
+
 	/**
 	 * Method to add fee.
 	 *
@@ -1315,7 +1335,7 @@ class J2StoreTableOrder extends F0FTable
 		$ordershipping_table->ordershipping_code = $values[ 'shipping_code' ];
 		$ordershipping_table->ordershipping_name = $values[ 'shipping_name' ];
 		$ordershipping_table->ordershipping_type = $values[ 'shipping_plugin' ];
-		$ordershipping_table->ordershipping_total = $values[ 'shipping_price' ] + $values[ 'shipping_extra' ] + $values[ 'shipping_tax' ];
+		$ordershipping_table->ordershipping_total = (float)$values[ 'shipping_price' ] + (float)$values[ 'shipping_extra' ] + (float)$values[ 'shipping_tax' ];
 		$this->_shipping_totals = $ordershipping_table;
 
 	}
