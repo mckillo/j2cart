@@ -249,7 +249,16 @@ class J2StoreModelEmailtemplates extends F0FModel {
 					// External link, skip
 					$temp .= $url;
 				} else {
-					$ext = strtolower(JFile::getExt($url));
+                    if (class_exists('\Joomla\Filesystem\File') && method_exists('\Joomla\Filesystem\File', 'getExt')) {
+                        // Joomla 5 and 6
+                        $ext = \Joomla\Filesystem\File::getExt($url);
+                    } else {
+                        // Joomla 4 fallback
+                        $ext = \Joomla\CMS\Filesystem\File::getExt($url);
+                    }
+
+                    $ext = strtolower($ext);
+
 					if(!JFile::exists($url)) {
 						// Relative path, make absolute
 						$url = $baseURL.ltrim($url,'/');

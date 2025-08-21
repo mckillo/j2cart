@@ -1,44 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<extension version="2.5" type="plugin" group="finder" method="upgrade">
-	<name>Finder - J2Store</name>
-	<version>1.0</version>
-	<creationDate>September 2015</creationDate>
-	<author>Gokila Priya</author>
-	<authorEmail>support@j2store.org</authorEmail>
-	<authorUrl>http://j2store.org</authorUrl>
-	<copyright>2010 Weblogicx India Private Limited</copyright>
-	<license>https://www.gnu.org/licenses/gpl-3.0.html GNU/GPLv3 or later</license>
-	<description>PLG_FINDER_J2STORE_DESCRIPTION</description>
-	<files>
-		<file plugin="j2store">j2store.php</file>
-	   <filename>index.html</filename>
-		<folder>elements</folder>
-	</files>
-	<config>
-		<fields name="params">
-			<fieldset name="basic" addfieldpath="plugins/finder/j2store/elements/">
-				<field
-					name="redirect_to"
-					type="radio"
-					class="btn-group"
-					default="j2store"
-					label="PLG_FINDER_J2STORE_REDIRECT_TO_LABEL"
-					description="PLG_FINDER_J2STORE_REDIRECT_TO_LABEL_DESC"
-					required="true"
-					>
-					<option value="j2store">PLG_FINDER_J2STORE_VIEW</option>
-					<option value="article">PLG_FINDER_J2STORE_ARTICLE_VIEW</option>
-				</field>
-				<field
-					name="menuitem_id"
-					type="j2storemenuitem"
-					label="PLG_FINDER_J2STORE_SELECT_MENU_ITEM_LABEL"
-					description="PLG_FINDER_J2STORE_SELECT_MENU_ITEM_LABEL_DESC"
-					required="true"
-					>
-					<option value="0">J2STORE_SELECT_OPTION</option>
-				</field>
-			</fieldset>
-		</fields>
-	</config>
+<extension type="plugin" group="finder" method="upgrade">
+    <name>Smart Search - J2Store</name>
+    <author>J2Commerce</author>
+    <creationDate>JUN 2025</creationDate>
+    <copyright>(C) 2016-2024 http://j2store.org. All rights reserved.</copyright>
+    <copyright>(C) 2024-2025 J2Commerce, LLC</copyright>
+    <license>GNU General Public License v3 or later versions</license>
+    <authorEmail>support@j2commerce.com</authorEmail>
+    <authorUrl>https://www.j2commerce.com</authorUrl>
+    <version>4.1.0</version>
+    <namespace path="src">J2Commerce\Plugin\Finder\J2store</namespace>
+    <description>PLG_FINDER_J2STORE_DESCRIPTION</description>
+    <files>
+        <folder plugin="j2store">services</folder>
+        <folder>src</folder>
+    </files>
+    <config>
+        <fields name="params">
+            <fieldset name="basic" addfieldprefix="J2Commerce\Plugin\Finder\J2store\Field">
+                <field
+                    name="redirect_to"
+                    type="list"
+                    label="PLG_FINDER_J2STORE_REDIRECT_TO_LABEL"
+                    description="PLG_FINDER_J2STORE_REDIRECT_TO_LABEL_DESC"
+                    default="j2store"
+                    required="true"
+                    >
+                    <option value="j2store">PLG_FINDER_J2STORE_VIEW</option>
+                    <option value="article">PLG_FINDER_J2STORE_ARTICLE_VIEW</option>
+                </field>
+                <field
+                    name="menuitem_id"
+                    type="j2storemenuitem"
+                    label="PLG_FINDER_J2STORE_SELECT_MENU_ITEM_LABEL"
+                    description="PLG_FINDER_J2STORE_SELECT_MENU_ITEM_LABEL_DESC"
+                    required="true"
+                    >
+                    <option value="0">J2STORE_SELECT_OPTION</option>
+                </field>
+            </fieldset>
+        </fields>
+    </config>
 </extension>

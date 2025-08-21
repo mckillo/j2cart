@@ -14,6 +14,9 @@ class J2StoreModelProductsBehaviorVariable extends F0FModelBehavior {
 	private $_rawData = array();
 
 	public function onAfterGetItem(&$model, &$record) {
+
+        if($record->product_type != 'variable') return;
+
         $platform = J2Store::platform();
 		//we just have the products. Get the variants
 		$variantModel = F0FModel::getTmpInstance('Variants', 'J2StoreModel');
@@ -158,6 +161,8 @@ class J2StoreModelProductsBehaviorVariable extends F0FModelBehavior {
 		if($this->_rawData) {
 
 			$table = $model->getTable();
+
+            if($table->product_type != 'variable') return;
 
 			//save variant
 			//since post has too much of information, this could do the job
@@ -508,6 +513,7 @@ class J2StoreModelProductsBehaviorVariable extends F0FModelBehavior {
 	}
 
 	public function onUpdateProduct(&$model, &$product) {
+        if($product->product_type != 'variable') return;
         $platform = J2Store::platform();
 		$app = $platform->application();
 		$product_helper = J2Store::product();
@@ -530,8 +536,6 @@ class J2StoreModelProductsBehaviorVariable extends F0FModelBehavior {
 
 
 		if($variant === false) return false;
-
-		//now we have the variant. Process.
 
 		//get quantity restrictions
 		$product_helper->getQuantityRestriction($variant);
@@ -561,10 +565,12 @@ class J2StoreModelProductsBehaviorVariable extends F0FModelBehavior {
 		$return['variant_id'] = $variant->j2store_variant_id;
 		$param_data = $platform->getRegistry($variant->params);
 		$main_image = $param_data->get('variant_main_image','');
-		$image_path = JUri::root();
-		$return['main_image'] = isset( $main_image ) && !empty( $main_image ) ? $image_path.$main_image : $image_path.$product->main_image;
+		$thumb_image = $param_data->get('variant_thumb_image','');
+
+		$return['main_image'] = isset( $main_image ) && !empty( $main_image ) ? $main_image : $product->main_image;
+		$return['thumb_image'] = isset($thumb_image) && !empty($thumb_image) ? $thumb_image : $product->thumb_image;
 		$return['sku'] = $variant->sku;
-		$return['quantity'] = floatval($quantity);
+		$return['quantity'] = (float) $quantity;
 		$return['price'] = $variant->price;
 		$return['availability'] = $variant->availability;
 		$return['manage_stock'] = $variant->manage_stock;
@@ -598,11 +604,23 @@ class J2StoreModelProductsBehaviorVariable extends F0FModelBehavior {
                 $return['pricing']['discount_text'] = JText::sprintf('J2STORE_PRODUCT_OFFER',round($discount).'%');
             }
         }
+
 		//dimensions
 		$return['dimensions'] = round($variant->length,2).' x '.round($variant->width,2).' x '.round($variant->height,2).' '.$variant->length_title;
 		$return['weight'] = round($variant->weight,2).' '.$variant->weight_title;
+		$return['length'] = round($variant->length,2).' '.$variant->length_title;
+		$return['width'] = round($variant->width,2).' '.$variant->length_title;
+		$return['height'] = round($variant->height,2).' '.$variant->length_title;
 		$return['weight_raw'] = round($variant->weight,2);
+		$return['length_raw'] = round($variant->length,2);
+		$return['width_raw'] = round($variant->width,2);
+		$return['height_raw'] = round($variant->height,2);
+		$return['dimensions_unit'] = $variant->length_title;
+		$return['length_title'] = $variant->length_title . ($variant->length > 1 ? ($variant->length_title === 'Inch' ? 'es' : 's') : '');
+		$return['width_title'] = $variant->length_title . ($variant->width > 1 ? ($variant->length_title === 'Inch' ? 'es' : 's') : '');
+		$return['height_title'] = $variant->length_title . ($variant->height > 1 ? ($variant->length_title === 'Inch' ? 'es' : 's') : '');
 		$return['weight_unit'] = $variant->weight_unit;
+		$return['weight_title'] = $variant->weight_title . ($variant->weight > 1 ? 's' : '');
         J2Store::plugin()->event('AfterUpdateProductReturn',array(&$return,$product,$params));
 		return $return;
 

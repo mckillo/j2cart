@@ -15,9 +15,7 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Language\LanguageFactoryInterface;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Mail\MailerFactoryInterface;
-use Joomla\CMS\Router\Route;
 use Joomla\CMS\Uri\Uri;
-use Joomla\Filesystem\File;
 use Joomla\Filesystem\Path;
 
 class J2Email
@@ -245,7 +243,16 @@ class J2Email
 					// External link, skip
 					$temp .= $url;
 				} else {
-					$ext = strtolower(File::getExt($url));
+                    if (class_exists('\Joomla\Filesystem\File') && method_exists('\Joomla\Filesystem\File', 'getExt')) {
+                        // Joomla 5 and 6
+                        $ext = \Joomla\Filesystem\File::getExt($url);
+                    } else {
+                        // Joomla 4 fallback
+                        $ext = \Joomla\CMS\Filesystem\File::getExt($url);
+                    }
+
+                    $ext = strtolower($ext);
+
 					if(!file_exists($url)) {
 						// Relative path, make absolute
 						//$url = $baseURL.ltrim($url,'/');
@@ -741,7 +748,16 @@ class J2Email
 					// External link, skip
 					$temp .= $url;
 				} else {
-					 $ext = strtolower(File::getExt($url));
+                    if (class_exists('\Joomla\Filesystem\File') && method_exists('\Joomla\Filesystem\File', 'getExt')) {
+                        // Joomla 5 and 6
+                        $ext = \Joomla\Filesystem\File::getExt($url);
+                    } else {
+                        // Joomla 4 fallback
+                        $ext = \Joomla\CMS\Filesystem\File::getExt($url);
+                    }
+
+                    $ext = strtolower($ext);
+
 					if(!file_exists($url)) {
 						$base_path = str_replace('/administrator', '', Uri::base(true));
 						//replace sub path
@@ -819,7 +835,16 @@ class J2Email
 					// External link, skip
 					$temp .= $url;
 				} else {
-					$ext = strtolower(File::getExt($url));
+                    if (class_exists('\Joomla\Filesystem\File') && method_exists('\Joomla\Filesystem\File', 'getExt')) {
+                        // Joomla 5 and 6
+                        $ext = \Joomla\Filesystem\File::getExt($url);
+                    } else {
+                        // Joomla 4 fallback
+                        $ext = \Joomla\CMS\Filesystem\File::getExt($url);
+                    }
+
+                    $ext = strtolower($ext);
+
 					if(!file_exists($url)) {
 						// Relative path, make absolute
 						$url = $baseURL.ltrim($url,'/');

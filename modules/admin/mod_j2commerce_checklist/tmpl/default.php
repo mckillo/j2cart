@@ -32,10 +32,10 @@ $encodedUrl = htmlspecialchars($currentUri, ENT_QUOTES, 'UTF-8');
 ?>
 <?php if($danger_count > 0):?>
     <div class="j2commerce_checklist">
-        <div class="alert alert-warning mb-0 rounded-bottom-0" role="alert">
+        <div class="alert alert-warning rounded-bottom-0" role="alert">
             <?php echo Text::sprintf('MOD_J2COMMERCE_CHECKLIST_ALERT_WARNING',$success_count, $total_count);?>
-            <div class="progress rounded-0" style="background-color:var(--state-warning-bg);" role="progressbar" aria-label="Example with label" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
-                <div class="progress-bar" style="background-color:var(--state-warning-text);width: <?php echo $completion_percentage;?>%"><?php echo $completion_percentage;?>%</div>
+            <div class="progress rounded-0" style="background-color:var(--state-warning-bg, var(--progress-bg));" role="progressbar" aria-label="Example with label" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
+                <div class="progress-bar" style="background-color:var(--state-warning-text, var(--progress-bar-bg));width: <?php echo $completion_percentage;?>%"><?php echo $completion_percentage;?>%</div>
             </div>
         </div>
 
