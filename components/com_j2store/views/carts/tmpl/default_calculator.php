@@ -59,6 +59,7 @@ defined( '_JEXEC' ) or die( 'Restricted access' );
           </td>
           <td><input type="text" id="estimate_postcode" name="postcode" value="<?php echo $this->postcode; ?>" /></td>
         </tr>
+          <?php echo J2Store::plugin()->eventWithHtml('AfterDisplayCalculatorField', array($this->order)); ?>
       </table>
       <input type="button" value="<?php echo JText::_('J2STORE_CART_CALCULATE_TAX_SHIPPING'); ?>" id="button-quote" class="btn btn-primary" />
  
